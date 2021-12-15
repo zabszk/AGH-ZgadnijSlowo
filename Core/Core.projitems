@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>AFA76187-75E5-47D5-B0FB-058B36800F0F</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Misc\SecureRandomGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Misc\Utf8.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WordsStorage.cs" />
+  </ItemGroup>
+</Project>
