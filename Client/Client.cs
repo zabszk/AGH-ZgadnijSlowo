@@ -22,117 +22,126 @@ namespace Client
 
         internal static async Task Start(CancellationToken token, IPAddress ip, int port, string username, string password)
         {
-            Console.WriteLine($"Connecting to {ip}:{port}...");
-            await _client.ConnectAsync(ip, port, token);
-            Console.WriteLine($"Connected to {ip}:{port}");
+            try
+            {
+                Console.WriteLine($"Connecting to {ip}:{port}...");
+                await _client.ConnectAsync(ip, port, token);
+                Console.WriteLine($"Connected to {ip}:{port}");
 
-            _s = _client.GetStream();
-            _reader = new StreamReader(_s);
-            WriteText(username);
-            WriteText(password);
-            
-            var line = await _reader.ReadLineAsync();
-            if (line == "+")
-                Console.WriteLine("Authentication successful.");
-            else
-            {
-                Console.WriteLine("Authentication failed!");
-                return;
-            }
-            
-            bool capturePositions = false;
-            _availableLetters = new(26);
-            StringBuilder sb = new();
-            
-            for (byte c = 97; c <= 122; c++)
-                _availableLetters.Add(Convert.ToChar(c));
-            
-            while (!token.IsCancellationRequested)
-            {
-                await Task.Delay(15, token);
-                
-                if (!_client.Connected)
+                _s = _client.GetStream();
+                _reader = new StreamReader(_s);
+                WriteText(username);
+                WriteText(password);
+
+                var line = await _reader.ReadLineAsync();
+                if (line == "+")
+                    Console.WriteLine("Authentication successful.");
+                else
                 {
-                    Program.Cts.Cancel();
-                    break;
+                    Console.WriteLine("Authentication failed!");
+                    return;
                 }
-                
-                if (_reader.EndOfStream)
-                    continue;
 
-                line = await _reader.ReadLineAsync();
-                Console.WriteLine($"[RECV] {line ?? "(null)"}");
+                bool capturePositions = false;
+                _availableLetters = new(26);
+                StringBuilder sb = new();
 
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
+                for (byte c = 97; c <= 122; c++)
+                    _availableLetters.Add(Convert.ToChar(c));
 
-                if (capturePositions)
+                while (!token.IsCancellationRequested)
                 {
-                    capturePositions = false;
+                    await Task.Delay(15, token);
 
-                    if (_lastGuessed != '\0')
+                    if (!_client.Connected || !_s.CanRead || _reader.EndOfStream)
                     {
-                        for (int j = 0; j < line.Length; j++)
-                            if (line[j] == '1')
-                                _guessedLetters[j] = _lastGuessed;
-                        Guess();
+                        Program.Cts.Cancel();
+                        break;
+                    }
+
+                    line = await _reader.ReadLineAsync();
+                    Console.WriteLine($"[RECV] {line ?? "(null)"}");
+
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
+
+                    if (capturePositions)
+                    {
+                        capturePositions = false;
+
+                        if (_lastGuessed != '\0')
+                        {
+                            for (int j = 0; j < line.Length; j++)
+                                if (line[j] == '1')
+                                    _guessedLetters[j] = _lastGuessed;
+                            Guess();
+                            continue;
+                        }
+                    }
+
+                    if (_guessedLetters != null)
+                    {
+                        sb.Append("Currently guessed: ");
+
+                        foreach (var c in _guessedLetters)
+                            sb.Append(c);
+
+                        Console.WriteLine(sb.ToString());
+                        sb.Clear();
+                    }
+
+                    switch (line)
+                    {
+                        case "?":
+                            Console.WriteLine("Server requested disconnection.");
+                            return;
+
+                        case "@":
+                            WriteText(Program.Words.Words[
+                                SecureRandomGenerator.RandomInt(0, Program.Words.Words.Count - 1)]);
+                            break;
+
+                        case "!":
+                        case "#":
+                            if (_i < 10)
+                            {
+                                Guess();
+                                _i++;
+                            }
+                            break;
+
+                        case "=":
+                            if (_lastGuessed != '\0')
+                                capturePositions = true;
+                            else Guess();
+
+                            _i++;
+                            break;
+
+                        default:
+                            if (_i == 0)
+                            {
+                                _guessedLetters = new char[line.Length];
+                                for (int j = 0; j < line.Length; j++)
+                                    _guessedLetters[j] = '?';
+
+                                Guess();
+                            }
+
+                            _i++;
+                            break;
                     }
                 }
-                
-                if (_guessedLetters != null)
-                {
-                    sb.Append("Currently guessed: ");
-
-                    foreach (var c in _guessedLetters)
-                        sb.Append(c);
-                    
-                    Console.WriteLine(sb.ToString());
-                    sb.Clear();
-                }
-                
-                switch (line)
-                {
-                    case "?":
-                        Console.WriteLine("Server requested disconnection.");
-                        goto loopEnd;
-
-                    case "@":
-                        WriteText(Program.Words.Words[SecureRandomGenerator.RandomInt(0, Program.Words.Words.Count - 1)]);
-                        break;
-                    
-                    case "!":
-                    case "#":
-                        Guess();
-                        _i++;
-                        break;
-                    
-                    case "=":
-                        if (_lastGuessed != '\0')
-                            capturePositions = true;
-                        else Guess();
-                        
-                        _i++;
-                        break;
-                    
-                    default:
-                        if (_i == 0)
-                        {
-                            _guessedLetters = new char[line.Length];
-                            for (int j = 0; j < line.Length; j++)
-                                _guessedLetters[j] = '?';
-                            
-                            Guess();
-                        }
-
-                        _i++;
-                        break;
-                }
             }
-            
-            loopEnd:
-            _client.Dispose();
-            Program.Cts.Cancel();
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+            finally
+            {
+                _client.Dispose();
+                Program.Cts.Cancel();
+            }
         }
 
         private static void Guess()

@@ -84,7 +84,7 @@ namespace Server.ServerConsole
 
                             checks++;
 
-                            if (checks > 2400)
+                            if (checks > 1200)
                             {
                                 checks = 0;
                                 await sw.FlushAsync();

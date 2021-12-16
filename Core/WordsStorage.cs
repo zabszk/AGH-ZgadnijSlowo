@@ -1,23 +1,42 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Core
 {
     public abstract class WordsStorage
     {
         protected abstract void Add(string text);
-
         protected WordsStorage() => Load();
 
         private void Load()
         {
-            string line;
-            var fs = new FileStream("slowa.txt", FileMode.Open, FileAccess.Read,
-                FileShare.ReadWrite);
+            if (!File.Exists("slowa.txt"))
+            {
+                Error("Words file (\"slowa.txt\") doesn't exist!");
+                return;
+            }
 
-            var reader = new StreamReader(fs);
+            try
+            {
+                string line;
+                var fs = new FileStream("slowa.txt", FileMode.Open, FileAccess.Read,
+                    FileShare.ReadWrite);
 
-            while ((line = reader.ReadLine()) != null)
-                Add(line);
+                var reader = new StreamReader(fs);
+
+                while ((line = reader.ReadLine()) != null)
+                    Add(line);
+            }
+            catch (Exception e)
+            {
+                Error($"Loading words list failed: {e.Message}");
+            }
+        }
+        
+        protected virtual void Error(string error)
+        {
+            Console.WriteLine(error);
+            Environment.Exit(0);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Client
 
         private static void Main(string[] args)
         {
-            Console.WriteLine($"ZgadnijSlowo Client, v. {Core.Version.VersionString}");
+            Console.WriteLine($"ZgadnijSlowo Client, v.{Core.Version.VersionString}");
             Console.WriteLine("Copyright by Łukasz Jurczyk, 2021");
             Console.WriteLine("Licensed under the MIT License.");
             

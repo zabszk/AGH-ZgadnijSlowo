@@ -120,6 +120,7 @@ namespace Server
 
                 _log.Enqueue(Invariant($"Game started at: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}Z"));
                 _log.Enqueue($"Internal Game ID: {InternalId}");
+                _log.Enqueue($"Server version: {Core.Version.VersionString}");
                 _log.Enqueue(string.Empty);
 
                 lock (PlayersListLock)

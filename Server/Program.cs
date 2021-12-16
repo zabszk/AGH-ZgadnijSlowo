@@ -11,14 +11,14 @@ namespace Server
 {
     internal static class Program
     {
-        internal static readonly CancellationTokenSource Cts = new (), LoggerCts = new();
+        private static readonly CancellationTokenSource Cts = new(), LoggerCts = new();
         public static readonly UTF8Encoding Encoder = new ();
         internal static Server Server;
         private static uint _cancelling;
 
-        private static void Main(string[] args)
+        private static void Main()
         {
-            Console.CancelKeyPress += (sender, eventArgs) =>
+            Console.CancelKeyPress += (_, eventArgs) =>
             {
                 switch (_cancelling)
                 {
@@ -40,48 +40,61 @@ namespace Server
                 }
             };
 
-            Console.WriteLine($"ZgadnijSlowo Server, v. {Core.Version.VersionString}");
-            Console.WriteLine("Copyright by Łukasz Jurczyk, 2021");
-            Console.WriteLine("Licensed under the MIT License.");
-            Console.WriteLine("Loading configs...");
-            if (!ConfigManager.Load())
-            {
-                Console.WriteLine("Config files have been generated!");
-                return;
-            }
-            Console.WriteLine("All configs loaded.");
-
-            if (!IPAddress.TryParse(ConfigManager.PrimaryConfig.ListeningIp, out var ip))
-            {
-                Console.WriteLine("Failed to parse Listening IP!");
-                return;
-            }
-
-            if (ConfigManager.PrimaryConfig.CurrentRound == null || ConfigManager.PrimaryConfig.Rounds.All(r =>
-                !r.ShortName.Equals(ConfigManager.PrimaryConfig.CurrentRound, StringComparison.Ordinal)))
-            {
-                Console.WriteLine("Invalid Current Round - null or doesn't exist.");
-                return;
-            }
-
-            InputHandler.Init();
-            Server = new Server(new IPEndPoint(ip, ConfigManager.PrimaryConfig.ListeningPort));
-            var loggerTask = Logger.QueueTask(LoggerCts.Token);
-            InputCapture.Start(Cts.Token);
+            Task loggerTask = null;
             
-            Task.WaitAll(Server.Start(Cts.Token), Server.TimeoutClients(Cts.Token), AutoSave(Cts.Token));
-            
-            Server.Dispose();
-            Save();
-            LoggerCts.Cancel();
-            loggerTask.Wait();
+            try
+            {
+                Logger.Log($"ZgadnijSlowo Server, v.{Core.Version.VersionString}");
+                Logger.Log("Copyright by Łukasz Jurczyk, 2021");
+                Logger.Log("Licensed under the MIT License.");
+                Logger.Log("Loading configs...");
+                loggerTask = Logger.QueueTask(LoggerCts.Token);
+                
+                if (!ConfigManager.Load())
+                {
+                    Logger.Log("Config files have been generated!");
+                    return;
+                }
+
+                if (ConfigManager.WordsStorage.Words.Count == 0)
+                    return;
+
+                Logger.Log("All configs loaded.");
+
+                if (!IPAddress.TryParse(ConfigManager.PrimaryConfig.ListeningIp, out var ip))
+                {
+                    Logger.Log("Failed to parse Listening IP!", Logger.LogEntryPriority.Critical);
+                    return;
+                }
+
+                if (ConfigManager.PrimaryConfig.CurrentRound == null || ConfigManager.PrimaryConfig.Rounds.All(r =>
+                        !r.ShortName.Equals(ConfigManager.PrimaryConfig.CurrentRound, StringComparison.Ordinal)))
+                {
+                    Logger.Log("Invalid Current Round - null or doesn't exist.", Logger.LogEntryPriority.Critical);
+                    return;
+                }
+
+                InputHandler.Init();
+                Server = new Server(new IPEndPoint(ip, ConfigManager.PrimaryConfig.ListeningPort));
+                InputCapture.Start(Cts.Token);
+
+                Task.WaitAll(Server.Start(Cts.Token), Server.TimeoutClients(Cts.Token), AutoSave(Cts.Token),
+                    ScoreboardGenerationTask(Cts.Token));
+            }
+            finally
+            {
+                Server?.Dispose();
+                Save();
+                LoggerCts.Cancel();
+                loggerTask?.Wait();
+            }
         }
 
         internal static void Exit()
         {
             _cancelling = 1;
             Cts.Cancel();
-            Server.Dispose();
+            Server?.Dispose();
         }
 
         private static async Task AutoSave(CancellationToken token)
@@ -103,6 +116,32 @@ namespace Server
                 Logger.Log("Running autosave...");
                 Save();
                 Logger.Log("Autosave completed.");
+            }
+        }
+
+        private static async Task ScoreboardGenerationTask(CancellationToken token)
+        {
+            ConfigManager.GenerateScoreboard();
+
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    try
+                    {
+                        await Task.Delay(30000, token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        //Ignore
+                    }
+
+                    ConfigManager.GenerateScoreboard();
+                }
+                catch (Exception e)
+                {
+                    Logger.Log($"Failed to generate the scoreboard: {e.Message}", Logger.LogEntryPriority.Error);
+                }
             }
         }
 

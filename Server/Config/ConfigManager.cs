@@ -14,7 +14,7 @@ namespace Server.Config
         public static UsersConfig UsersConfig;
         public static ServerWordsStorage WordsStorage;
 
-        private static readonly object PrimaryLock = new(), UsersLock = new();
+        private static readonly object PrimaryLock = new(), UsersLock = new(), ScoreboardLock = new();
 
         public static Dictionary<string, User> Users => UsersConfig.Users;
 
@@ -53,7 +53,7 @@ namespace Server.Config
                     fs.Close();
                 }
 
-                Console.WriteLine("Users config loaded.");
+                Logger.Log("Users config loaded.");
             }
 
             lock (PrimaryLock)
@@ -85,11 +85,12 @@ namespace Server.Config
                     fs.Close();
                 }
 
-                Console.WriteLine("Primary config loaded.");
+                Logger.Log("Primary config loaded.");
             }
 
             WordsStorage = new ServerWordsStorage();
-            Console.WriteLine("Words database loaded.");
+            if (WordsStorage.Words.Count != 0)
+                Logger.Log("Words database loaded.");
             
             return true;
         }
@@ -136,6 +137,42 @@ namespace Server.Config
                     Logger.Log($"Saving users config failed: {e.Message}", Logger.LogEntryPriority.Critical);
                 }
             }
+        }
+
+        public static void GenerateScoreboard()
+        {
+            Logger.Log("Generating scoreboard...");
+            List<ScoreboardUser> su = new(Users.Count);
+
+            lock (UsersLock)
+            {
+                foreach (var u in Users)
+                {
+                    if (u.Value.Suspended)
+                        continue;
+
+                    su.Add(new ScoreboardUser(u.Key, u.Value.Score, new DateTimeOffset(u.Value.LastLogin, TimeSpan.Zero).ToUnixTimeSeconds()));
+                }
+            }
+
+            Scoreboard sb;
+
+            lock (PrimaryLock)
+            {
+                sb = new Scoreboard(DateTimeOffset.UtcNow.ToUnixTimeSeconds(), PrimaryConfig.Rounds,
+                    new CurrentConfig(PrimaryConfig.CurrentRound, PrimaryConfig.PlayersLimit, PrimaryConfig.GameDelay),
+                    su);
+            }
+
+            lock (ScoreboardLock)
+            {
+                var fs = new FileStream(PathManager.ScoreboardPath, FileMode.Create, FileAccess.Write,
+                        FileShare.ReadWrite);
+                JsonSerializer.Serialize(fs, sb);
+                fs.Close();
+            }
+            
+            Logger.Log("Scoreboard has been generated.");
         }
     }
 }
