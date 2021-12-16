@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Misc\SecureRandomGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc\Utf8.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Version.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WordsStorage.cs" />
   </ItemGroup>
 </Project>

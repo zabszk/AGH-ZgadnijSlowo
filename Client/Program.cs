@@ -10,11 +10,13 @@ namespace Client
         internal static readonly CancellationTokenSource Cts = new ();
         public static readonly UTF8Encoding Encoder = new ();
         public static ClientWordsStorage Words;
-        
-		public const string Version = "1.0.0";
-		
+
         private static void Main(string[] args)
         {
+            Console.WriteLine($"ZgadnijSlowo Client, v. {Core.Version.VersionString}");
+            Console.WriteLine("Copyright by Łukasz Jurczyk, 2021");
+            Console.WriteLine("Licensed under the MIT License.");
+            
             if (args.Length != 4 || !IPAddress.TryParse(args[0], out var ip) || !ushort.TryParse(args[1], out var port))
             {
                 Console.WriteLine("Syntax: <ip address> <port> <username> <password>");

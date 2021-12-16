@@ -16,8 +16,6 @@ namespace Server
         internal static Server Server;
         private static uint _cancelling;
 
-        public const string Version = "1.0.0";
-
         private static void Main(string[] args)
         {
             Console.CancelKeyPress += (sender, eventArgs) =>
@@ -42,7 +40,9 @@ namespace Server
                 }
             };
 
-            Console.WriteLine($"Zgadnij Słowo Server by Łukasz Jurczyk, v. {Version}");
+            Console.WriteLine($"ZgadnijSlowo Server, v. {Core.Version.VersionString}");
+            Console.WriteLine("Copyright by Łukasz Jurczyk, 2021");
+            Console.WriteLine("Licensed under the MIT License.");
             Console.WriteLine("Loading configs...");
             if (!ConfigManager.Load())
             {
