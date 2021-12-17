@@ -239,7 +239,7 @@ namespace Server
                                         {
                                             case '=' when r[1..].Equals(_word, StringComparison.Ordinal):
                                                 c.WriteText("=");
-                                                c.ScoredDuringThisGame = (ushort)(_word.Length + 5);
+                                                c.ScoredDuringThisGame += 5;
                                                 c.WriteText(c.ScoredDuringThisGame.ToString());
                                                 Log(
                                                     $"Player {c.Username} guessed the word {r[1..]}. Total points awarded for the entire round: {c.ScoredDuringThisGame}.");

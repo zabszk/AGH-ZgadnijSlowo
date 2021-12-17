@@ -75,6 +75,7 @@ namespace Client
                                 if (line[j] == '1')
                                     _guessedLetters[j] = _lastGuessed;
                             Guess();
+                            _i++;
                             continue;
                         }
                         
@@ -110,9 +111,6 @@ namespace Client
                         case "=":
                             if (_lastGuessed != '\0')
                                 capturePositions = true;
-                            else Guess();
-
-                            _i++;
                             break;
 
                         default:
