@@ -69,7 +69,7 @@ namespace Server.Config
                 if (!File.Exists("config.json"))
                 {
                     PrimaryConfig = new PrimaryConfig("0.0.0.0", 7777, 10, 300,
-                        new List<Round> { new("Def", "Default round", 0) }, "Def", 0, "webroot");
+                        new List<Round> { new("def", "Default round", 0) }, "def", 0, "webroot", true);
                     var fs = new FileStream("config.json", FileMode.CreateNew, FileAccess.Write,
                         FileShare.ReadWrite);
                     JsonSerializer.Serialize(fs, PrimaryConfig);
@@ -85,6 +85,7 @@ namespace Server.Config
                     fs.Close();
                 }
 
+                Logger.LiveView = PrimaryConfig.LiveView;
                 Logger.Log("Primary config loaded.");
             }
 
@@ -141,7 +142,7 @@ namespace Server.Config
 
         public static void GenerateScoreboard()
         {
-            Logger.Log("Generating scoreboard...");
+            Logger.Log("Generating scoreboard...", Logger.LogEntryPriority.LiveView, uint.MaxValue, Logger.LogType.Print);
             List<ScoreboardUser> su = new(Users.Count);
 
             lock (UsersLock)
@@ -159,7 +160,7 @@ namespace Server.Config
 
             lock (PrimaryLock)
             {
-                sb = new Scoreboard(DateTimeOffset.UtcNow.ToUnixTimeSeconds(), PrimaryConfig.Rounds,
+                sb = new Scoreboard(DateTimeOffset.UtcNow.ToUnixTimeSeconds(), Core.Version.VersionString, PrimaryConfig.Rounds,
                     new CurrentConfig(PrimaryConfig.CurrentRound, PrimaryConfig.PlayersLimit, PrimaryConfig.GameDelay),
                     su);
             }
@@ -172,7 +173,7 @@ namespace Server.Config
                 fs.Close();
             }
             
-            Logger.Log("Scoreboard has been generated.");
+            Logger.Log("Scoreboard has been generated.", Logger.LogEntryPriority.LiveView, uint.MaxValue, Logger.LogType.Print);
         }
     }
 }

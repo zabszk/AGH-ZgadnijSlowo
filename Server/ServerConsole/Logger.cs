@@ -3,13 +3,26 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Server.Config;
 using static System.FormattableString; 
 
 namespace Server.ServerConsole
 {
     public static class Logger
     {
-        public static bool LiveView = true;
+        private static bool _liveView = true;
+        
+        public static bool LiveView
+        {
+            get => _liveView;
+            set
+            {
+                _liveView = value;
+                ConfigManager.PrimaryConfig.LiveView = value;
+                ConfigManager.SavePrimary();
+            }
+        }
+        
         private static readonly ConcurrentQueue<LogEntry> Q = new();
 
         private static readonly ConsoleColor[] Colors = 

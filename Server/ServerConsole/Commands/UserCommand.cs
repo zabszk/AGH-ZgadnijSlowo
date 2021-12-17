@@ -40,7 +40,7 @@ namespace Server.ServerConsole.Commands
                             sb.AppendLine();
 
                             foreach (var round in u.Value.Score)
-                                sb.AppendFormat("- {0}: {1}\n", round.Value, round.Key);
+                                sb.AppendFormat("- {0}: {1}\n", round.Key, round.Value);
 
                             sb.AppendLine();
                         }

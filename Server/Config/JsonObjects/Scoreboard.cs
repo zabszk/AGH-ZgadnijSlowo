@@ -7,14 +7,16 @@ namespace Server.Config.JsonObjects
     public readonly struct Scoreboard : IEquatable<Scoreboard>
     {
         public readonly long Timestamp;
+        public readonly string ServerVersion;
         public readonly List<Round> Rounds;
         public readonly CurrentConfig ServerConfig;
         public readonly List<ScoreboardUser> Scores;
         
         [SerializationConstructor]
-        public Scoreboard(long timestamp, List<Round> rounds, CurrentConfig serverConfig, List<ScoreboardUser> scores)
+        public Scoreboard(long timestamp, string serverVersion, List<Round> rounds, CurrentConfig serverConfig, List<ScoreboardUser> scores)
         {
             Timestamp = timestamp;
+            ServerVersion = serverVersion;
             Rounds = rounds;
             ServerConfig = serverConfig;
             Scores = scores;

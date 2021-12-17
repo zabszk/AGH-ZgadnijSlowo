@@ -188,9 +188,6 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             }
 
             var ____result = new global::Server.Config.JsonObjects.Round(__ShortName__, __Name__, __DisplayOrder__);
-            if(__ShortName__b__) ____result.ShortName = __ShortName__;
-            if(__Name__b__) ____result.Name = __Name__;
-            if(__DisplayOrder__b__) ____result.DisplayOrder = __DisplayOrder__;
 
             return ____result;
         }
@@ -395,14 +392,16 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             this.____keyMapping = new global::Utf8Json.Internal.AutomataDictionary()
             {
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Timestamp"), 0},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Rounds"), 1},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ServerConfig"), 2},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Scores"), 3},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ServerVersion"), 1},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Rounds"), 2},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ServerConfig"), 3},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Scores"), 4},
             };
 
             this.____stringByteKeys = new byte[][]
             {
                 JsonWriter.GetEncodedPropertyNameWithBeginObject("Timestamp"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("ServerVersion"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Rounds"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("ServerConfig"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Scores"),
@@ -417,10 +416,12 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteRaw(this.____stringByteKeys[0]);
             writer.WriteInt64(value.Timestamp);
             writer.WriteRaw(this.____stringByteKeys[1]);
-            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>>().Serialize(ref writer, value.Rounds, formatterResolver);
+            writer.WriteString(value.ServerVersion);
             writer.WriteRaw(this.____stringByteKeys[2]);
-            formatterResolver.GetFormatterWithVerify<global::Server.Config.JsonObjects.CurrentConfig>().Serialize(ref writer, value.ServerConfig, formatterResolver);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>>().Serialize(ref writer, value.Rounds, formatterResolver);
             writer.WriteRaw(this.____stringByteKeys[3]);
+            formatterResolver.GetFormatterWithVerify<global::Server.Config.JsonObjects.CurrentConfig>().Serialize(ref writer, value.ServerConfig, formatterResolver);
+            writer.WriteRaw(this.____stringByteKeys[4]);
             formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>>().Serialize(ref writer, value.Scores, formatterResolver);
             
             writer.WriteEndObject();
@@ -436,6 +437,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
 
             var __Timestamp__ = default(long);
             var __Timestamp__b__ = false;
+            var __ServerVersion__ = default(string);
+            var __ServerVersion__b__ = false;
             var __Rounds__ = default(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>);
             var __Rounds__b__ = false;
             var __ServerConfig__ = default(global::Server.Config.JsonObjects.CurrentConfig);
@@ -462,14 +465,18 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __Timestamp__b__ = true;
                         break;
                     case 1:
+                        __ServerVersion__ = reader.ReadString();
+                        __ServerVersion__b__ = true;
+                        break;
+                    case 2:
                         __Rounds__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>>().Deserialize(ref reader, formatterResolver);
                         __Rounds__b__ = true;
                         break;
-                    case 2:
+                    case 3:
                         __ServerConfig__ = formatterResolver.GetFormatterWithVerify<global::Server.Config.JsonObjects.CurrentConfig>().Deserialize(ref reader, formatterResolver);
                         __ServerConfig__b__ = true;
                         break;
-                    case 3:
+                    case 4:
                         __Scores__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>>().Deserialize(ref reader, formatterResolver);
                         __Scores__b__ = true;
                         break;
@@ -482,7 +489,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.Scoreboard(__Timestamp__, __Rounds__, __ServerConfig__, __Scores__);
+            var ____result = new global::Server.Config.JsonObjects.Scoreboard(__Timestamp__, __ServerVersion__, __Rounds__, __ServerConfig__, __Scores__);
 
             return ____result;
         }
@@ -506,6 +513,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("CurrentRound"), 5},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("NextGameId"), 6},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("WebRootPath"), 7},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LiveView"), 8},
             };
 
             this.____stringByteKeys = new byte[][]
@@ -518,6 +526,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("CurrentRound"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("NextGameId"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("WebRootPath"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("LiveView"),
                 
             };
         }
@@ -542,6 +551,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteUInt32(value.NextGameId);
             writer.WriteRaw(this.____stringByteKeys[7]);
             writer.WriteString(value.WebRootPath);
+            writer.WriteRaw(this.____stringByteKeys[8]);
+            writer.WriteBoolean(value.LiveView);
             
             writer.WriteEndObject();
         }
@@ -570,6 +581,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __NextGameId__b__ = false;
             var __WebRootPath__ = default(string);
             var __WebRootPath__b__ = false;
+            var __LiveView__ = default(bool);
+            var __LiveView__b__ = false;
 
             var ____count = 0;
             reader.ReadIsBeginObjectWithVerify();
@@ -617,6 +630,10 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __WebRootPath__ = reader.ReadString();
                         __WebRootPath__b__ = true;
                         break;
+                    case 8:
+                        __LiveView__ = reader.ReadBoolean();
+                        __LiveView__b__ = true;
+                        break;
                     default:
                         reader.ReadNextBlock();
                         break;
@@ -626,7 +643,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__);
+            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__);
             if(__ListeningIp__b__) ____result.ListeningIp = __ListeningIp__;
             if(__ListeningPort__b__) ____result.ListeningPort = __ListeningPort__;
             if(__PlayersLimit__b__) ____result.PlayersLimit = __PlayersLimit__;
@@ -635,6 +652,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             if(__CurrentRound__b__) ____result.CurrentRound = __CurrentRound__;
             if(__NextGameId__b__) ____result.NextGameId = __NextGameId__;
             if(__WebRootPath__b__) ____result.WebRootPath = __WebRootPath__;
+            if(__LiveView__b__) ____result.LiveView = __LiveView__;
 
             return ____result;
         }

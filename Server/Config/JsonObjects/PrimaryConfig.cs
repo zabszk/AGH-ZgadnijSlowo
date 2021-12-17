@@ -14,9 +14,10 @@ namespace Server.Config.JsonObjects
         public string CurrentRound;
         public uint NextGameId;
         public string WebRootPath;
+        public bool LiveView;
 
         [SerializationConstructor]
-        public PrimaryConfig(string listeningIp, ushort listeningPort, ushort playersLimit, ushort gameDelay, List<Round> rounds, string currentRound, uint nextGameId, string webRootPath)
+        public PrimaryConfig(string listeningIp, ushort listeningPort, ushort playersLimit, ushort gameDelay, List<Round> rounds, string currentRound, uint nextGameId, string webRootPath, bool liveView)
         {
             ListeningIp = listeningIp;
             ListeningPort = listeningPort;
@@ -26,13 +27,14 @@ namespace Server.Config.JsonObjects
             CurrentRound = currentRound;
             NextGameId = nextGameId;
             WebRootPath = webRootPath;
+            LiveView = liveView;
         }
 
         public bool Equals(PrimaryConfig other)
         {
             return ListeningIp == other.ListeningIp && ListeningPort == other.ListeningPort &&
                    PlayersLimit == other.PlayersLimit && GameDelay == other.GameDelay && Rounds == other.Rounds &&
-                   CurrentRound == other.CurrentRound && WebRootPath == other.WebRootPath;
+                   CurrentRound == other.CurrentRound && WebRootPath == other.WebRootPath && LiveView == other.LiveView;
         }
 
         public override bool Equals(object obj)
@@ -42,7 +44,7 @@ namespace Server.Config.JsonObjects
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ListeningIp, ListeningPort, PlayersLimit, GameDelay, Rounds, CurrentRound, WebRootPath);
+            return HashCode.Combine(ListeningIp, ListeningPort, PlayersLimit, GameDelay, Rounds, CurrentRound, WebRootPath, LiveView);
         }
 
         public static bool operator ==(PrimaryConfig left, PrimaryConfig right)
@@ -56,11 +58,11 @@ namespace Server.Config.JsonObjects
         }
     }
 
-    public struct Round : IEquatable<Round>
+    public readonly struct Round : IEquatable<Round>
     {
-        public string ShortName;
-        public string Name;
-        public int DisplayOrder;
+        public readonly string ShortName;
+        public readonly string Name;
+        public readonly int DisplayOrder;
 
         [SerializationConstructor]
         public Round(string shortName, string name, int displayOrder)
@@ -70,9 +72,9 @@ namespace Server.Config.JsonObjects
             DisplayOrder = displayOrder;
         }
 
-        public void SetName(string name) => Name = name;
-        
-        public void SetPriority(int displayOrder) => DisplayOrder = displayOrder;
+        public Round SetName(string name) => new(ShortName, name, DisplayOrder);
+
+        public Round SetPriority(int displayOrder) => new(ShortName, Name, displayOrder);
 
         public bool Equals(Round other)
         {

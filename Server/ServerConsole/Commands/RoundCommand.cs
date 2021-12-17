@@ -50,13 +50,13 @@ namespace Server.ServerConsole.Commands
                         if (r.ShortName.Equals(args[1], StringComparison.OrdinalIgnoreCase))
                         {
                             Logger.Log("Round with this short name already exists.", Logger.LogEntryPriority.Error);
-                            break;
+                            return;
                         }
                         
                         if (r.Name.Equals(fullName, StringComparison.OrdinalIgnoreCase))
                         {
                             Logger.Log("Round with this full name already exists.", Logger.LogEntryPriority.Error);
-                            break;
+                            return;
                         }
                     }
                     
@@ -81,8 +81,8 @@ namespace Server.ServerConsole.Commands
                         {
                             ConfigManager.PrimaryConfig.Rounds.RemoveAt(i);
                             ConfigManager.SavePrimary();
-                            Logger.Log("Specified round has been removed.", Logger.LogEntryPriority.Error);
-                            break;
+                            Logger.Log("Specified round has been removed.", Logger.LogEntryPriority.CommandOutput);
+                            return;
                         }
                     
                     Logger.Log("Specified round doesn't exist.", Logger.LogEntryPriority.Error);
@@ -93,10 +93,10 @@ namespace Server.ServerConsole.Commands
                         if (ConfigManager.PrimaryConfig.Rounds[i].ShortName
                             .Equals(args[1], StringComparison.OrdinalIgnoreCase))
                         {
-                            ConfigManager.PrimaryConfig.Rounds[i].SetPriority(priority);
+                            ConfigManager.PrimaryConfig.Rounds[i] = ConfigManager.PrimaryConfig.Rounds[i].SetPriority(priority);
                             ConfigManager.SavePrimary();
-                            Logger.Log("Specified round has been updated.", Logger.LogEntryPriority.Error);
-                            break;
+                            Logger.Log("Specified round has been updated.", Logger.LogEntryPriority.CommandOutput);
+                            return;
                         }
                     
                     Logger.Log("Specified round doesn't exist.", Logger.LogEntryPriority.Error);
@@ -117,10 +117,10 @@ namespace Server.ServerConsole.Commands
                         if (ConfigManager.PrimaryConfig.Rounds[i].ShortName
                             .Equals(args[1], StringComparison.OrdinalIgnoreCase))
                         {
-                            ConfigManager.PrimaryConfig.Rounds[i].SetName(string.Join(' ', args.Skip(2)));
+                            ConfigManager.PrimaryConfig.Rounds[i] = ConfigManager.PrimaryConfig.Rounds[i].SetName(string.Join(' ', args.Skip(2)));
                             ConfigManager.SavePrimary();
-                            Logger.Log("Specified round has been updated.", Logger.LogEntryPriority.Error);
-                            break;
+                            Logger.Log("Specified round has been updated.", Logger.LogEntryPriority.CommandOutput);
+                            return;
                         }
                     
                     Logger.Log("Specified round doesn't exist.", Logger.LogEntryPriority.Error);
@@ -133,15 +133,15 @@ namespace Server.ServerConsole.Commands
                 case "select":
                     var lw = args[1].ToLowerInvariant();
                     if (ConfigManager.PrimaryConfig.Rounds.All(r =>
-                            !r.ShortName.Equals(lw, StringComparison.Ordinal)))
+                            !r.ShortName.Equals(lw, StringComparison.OrdinalIgnoreCase)))
                     {
                         Logger.Log("Specified round doesn't exist.", Logger.LogEntryPriority.Error);
-                        break;
+                        return;
                     }
 
                     ConfigManager.PrimaryConfig.CurrentRound = lw;
                     ConfigManager.SavePrimary();
-                    Logger.Log("Current round has been updated.", Logger.LogEntryPriority.Error);
+                    Logger.Log("Current round has been updated.", Logger.LogEntryPriority.CommandOutput);
                     break;
                 
                 default:
