@@ -116,7 +116,7 @@ namespace Server
                         User.LastLogin = DateTime.UtcNow;
                         
                         Logger.Log($"Player {Username} authenticated from endpoint {RemoteEndPoint}.", Logger.LogEntryPriority.LiveView, uint.MaxValue);
-                        WriteText("+");
+                        WriteText("+1");
                         
                         for (int i = 0; i < _server.Clients.Count; i++)
                             if (_server.Clients[i] != this && _server.Clients[i].Username.Equals(Username, StringComparison.OrdinalIgnoreCase))

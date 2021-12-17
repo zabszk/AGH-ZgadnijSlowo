@@ -255,6 +255,7 @@ namespace Server
 
                                             case '+':
                                             {
+                                                sb.Clear();
                                                 ushort p = 0;
                                                 for (int k = 0; k < _word.Length; k++)
                                                 {
@@ -287,7 +288,6 @@ namespace Server
                                                     Log(
                                                         $"Player {c.Username} guessed letter {r[1]}. Points awarded: {p}.");
                                                 }
-
                                                 break;
                                             }
 
@@ -298,8 +298,6 @@ namespace Server
                                                 c.Dispose();
                                                 continue;
                                         }
-
-                                    sb.Clear();
                                     clsToRemove.Add(c);
                                 }
                                 catch (Exception e)
@@ -324,7 +322,6 @@ namespace Server
                         catch (Exception e)
                         {
                             Logger.Log($"Failed to process round tick: {e.Message}", Logger.LogEntryPriority.Critical);
-                            sb.Clear();
                             clsToRemove.Clear();
                         }
                     }
@@ -347,6 +344,8 @@ namespace Server
                 {
                     Log(
                         $"Player {player.Username} finished the game without guessing the word. Total awarded points: {player.ScoredDuringThisGame}.");
+                    player.WriteText(_word);
+                    player.WriteText(player.ScoredDuringThisGame.ToString());
                     player.Dispose();
                 }
 

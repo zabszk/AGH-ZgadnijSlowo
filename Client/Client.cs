@@ -34,7 +34,7 @@ namespace Client
                 WriteText(password);
 
                 var line = await _reader.ReadLineAsync();
-                if (line == "+")
+                if (line is "+1" or "+2")
                     Console.WriteLine("Authentication successful.");
                 else
                 {
@@ -77,10 +77,7 @@ namespace Client
                             Guess();
                             continue;
                         }
-                    }
-
-                    if (_guessedLetters != null)
-                    {
+                        
                         sb.Append("Currently guessed: ");
 
                         foreach (var c in _guessedLetters)
@@ -126,9 +123,9 @@ namespace Client
                                     _guessedLetters[j] = '?';
 
                                 Guess();
+                                
+                                _i++;
                             }
-
-                            _i++;
                             break;
                     }
                 }
