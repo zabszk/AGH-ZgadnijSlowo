@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Utf8Json;
 
 namespace Server.Config.JsonObjects
 {
     public readonly struct Scoreboard : IEquatable<Scoreboard>
     {
-        public readonly long Timestamp;
+        public readonly DateTime Timestamp;
         public readonly string ServerVersion;
         public readonly List<Round> Rounds;
         public readonly CurrentConfig ServerConfig;
         public readonly List<ScoreboardUser> Scores;
+        public readonly List<ScoreboardGame> GamesInProgress;
         
         [SerializationConstructor]
-        public Scoreboard(long timestamp, string serverVersion, List<Round> rounds, CurrentConfig serverConfig, List<ScoreboardUser> scores)
+        public Scoreboard(DateTime timestamp, string serverVersion, List<Round> rounds, CurrentConfig serverConfig, List<ScoreboardUser> scores, List<ScoreboardGame> gamesInProgress)
         {
             Timestamp = timestamp;
             ServerVersion = serverVersion;
-            Rounds = rounds;
             ServerConfig = serverConfig;
             Scores = scores;
+            Scores.Sort();
+            GamesInProgress = gamesInProgress;
+            Rounds = new();
+
+            foreach (var r in rounds)
+                if (r.DisplayOrder >= 0)
+                    Rounds.Add(r);
         }
 
         public bool Equals(Scoreboard other)
@@ -47,7 +55,7 @@ namespace Server.Config.JsonObjects
             return !left.Equals(right);
         }
     }
-
+    
     public readonly struct CurrentConfig : IEquatable<CurrentConfig>
     {
         public readonly string ActiveRound;
@@ -88,23 +96,32 @@ namespace Server.Config.JsonObjects
         }
     }
 
-    public readonly struct ScoreboardUser : IEquatable<ScoreboardUser>
+    public readonly struct ScoreboardUser : IEquatable<ScoreboardUser>, IComparable<ScoreboardUser>
     {
         public readonly string Username;
         public readonly Dictionary<string, int> Score;
-        public readonly long LastLogin;
-        
+
         [SerializationConstructor]
-        public ScoreboardUser(string username, Dictionary<string, int> score, long lastLogin)
+        public ScoreboardUser(string username, Dictionary<string, int> score)
         {
             Username = username;
-            Score = score;
-            LastLogin = lastLogin;
+            Score = new();
+            
+            foreach (var s in score)
+            {
+                var r = ConfigManager.PrimaryConfig.Rounds.FirstOrDefault(r => r.ShortName.Equals(s.Key, StringComparison.OrdinalIgnoreCase));
+                if (r != default && r.DisplayOrder >= 0)
+                    Score.Add(s.Key, s.Value);
+            }
         }
+
+        public int ScoreInCurrentRound() => Score.ContainsKey(ConfigManager.PrimaryConfig.CurrentRound)
+            ? Score[ConfigManager.PrimaryConfig.CurrentRound]
+            : 0;
 
         public bool Equals(ScoreboardUser other)
         {
-            return Username == other.Username && Equals(Score, other.Score) && LastLogin == other.LastLogin;
+            return Username == other.Username && Equals(Score, other.Score);
         }
 
         public override bool Equals(object obj)
@@ -114,7 +131,7 @@ namespace Server.Config.JsonObjects
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Username, Score, LastLogin);
+            return HashCode.Combine(Username, Score);
         }
 
         public static bool operator ==(ScoreboardUser left, ScoreboardUser right)
@@ -123,6 +140,81 @@ namespace Server.Config.JsonObjects
         }
 
         public static bool operator !=(ScoreboardUser left, ScoreboardUser right)
+        {
+            return !left.Equals(right);
+        }
+
+        public int CompareTo(ScoreboardUser other) => -ScoreInCurrentRound().CompareTo(other.ScoreInCurrentRound());
+
+        public static bool operator <(ScoreboardUser left, ScoreboardUser right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >(ScoreboardUser left, ScoreboardUser right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator <=(ScoreboardUser left, ScoreboardUser right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >=(ScoreboardUser left, ScoreboardUser right)
+        {
+            return left.CompareTo(right) >= 0;
+        }
+    }
+
+    public readonly struct ScoreboardGame : IEquatable<ScoreboardGame>
+    {
+        public readonly uint InternalId;
+        public readonly int TimeElapsed;
+        public readonly List<string> Players;
+        
+        [SerializationConstructor]
+        public ScoreboardGame(uint internalId, int timeElapsed, List<string> players)
+        {
+            InternalId = internalId;
+            TimeElapsed = timeElapsed;
+            Players = players;
+        }
+
+        internal ScoreboardGame(Game game)
+        {
+            InternalId = game.InternalId;
+            TimeElapsed = game.InProgress ? -2 : game.ToStart.IsRunning ? (int)game.ToStart.Elapsed.TotalSeconds : -1;
+            Players = new();
+
+            lock (game.PlayersListLock)
+            {
+                foreach (var pl in game.Players)
+                    Players.Add(pl.Username);
+            }
+        }
+
+        public bool Equals(ScoreboardGame other)
+        {
+            return InternalId == other.InternalId && TimeElapsed == other.TimeElapsed && Equals(Players, other.Players);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ScoreboardGame other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(InternalId, TimeElapsed, Players);
+        }
+
+        public static bool operator ==(ScoreboardGame left, ScoreboardGame right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ScoreboardGame left, ScoreboardGame right)
         {
             return !left.Equals(right);
         }

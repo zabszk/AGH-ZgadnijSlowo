@@ -143,26 +143,30 @@ namespace Server.Config
         public static void GenerateScoreboard()
         {
             Logger.Log("Generating scoreboard...", Logger.LogEntryPriority.LiveView, uint.MaxValue, Logger.LogType.Print);
+            Scoreboard sb;
+            List<ScoreboardGame> g;
             List<ScoreboardUser> su = new(Users.Count);
 
-            lock (UsersLock)
+            foreach (var u in Users)
             {
-                foreach (var u in Users)
-                {
-                    if (u.Value.Suspended)
-                        continue;
+                if (u.Value.Suspended)
+                    continue;
 
-                    su.Add(new ScoreboardUser(u.Key, u.Value.Score, new DateTimeOffset(u.Value.LastLogin, TimeSpan.Zero).ToUnixTimeSeconds()));
-                }
+                su.Add(new ScoreboardUser(u.Key, u.Value.Score));
             }
 
-            Scoreboard sb;
+            lock (Program.Server.GameQueueLock)
+            {
+                g = new(Program.Server.GameQueue.Count);
+                foreach (var game in Program.Server.GameQueue)
+                    g.Add(new(game));
+            }
 
             lock (PrimaryLock)
             {
-                sb = new Scoreboard(DateTimeOffset.UtcNow.ToUnixTimeSeconds(), Core.Version.VersionString, PrimaryConfig.Rounds,
+                sb = new Scoreboard(DateTime.UtcNow, Core.Version.VersionString, PrimaryConfig.Rounds,
                     new CurrentConfig(PrimaryConfig.CurrentRound, PrimaryConfig.PlayersLimit, PrimaryConfig.GameDelay),
-                    su);
+                    su, g);
             }
 
             lock (ScoreboardLock)

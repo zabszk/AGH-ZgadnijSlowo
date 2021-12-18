@@ -20,7 +20,7 @@ namespace Server
         internal readonly uint InternalId;
         private uint _gameId = uint.MaxValue;
         public bool InProgress;
-        private readonly Stopwatch _toStart = new();
+        public readonly Stopwatch ToStart = new();
         public readonly List<ServerClient> Players = new();
         private readonly Queue<string> _log = new();
         private readonly CancellationToken _token, _localToken;
@@ -93,9 +93,9 @@ namespace Server
             }
 
             if (Players.Count < 2)
-                _toStart.Reset();
-            else if (!_toStart.IsRunning)
-                _toStart.Restart();
+                ToStart.Reset();
+            else if (!ToStart.IsRunning)
+                ToStart.Restart();
         }
 
         private async Task GameTask()
@@ -106,7 +106,7 @@ namespace Server
                 while (!_token.IsCancellationRequested && !_localToken.IsCancellationRequested && !InProgress)
                 {
                     if (Players.Count == ConfigManager.PrimaryConfig.PlayersLimit ||
-                        _toStart.Elapsed.TotalSeconds >= ConfigManager.PrimaryConfig.GameDelay)
+                        ToStart.Elapsed.TotalSeconds >= ConfigManager.PrimaryConfig.GameDelay)
                     {
                         InProgress = true;
                         break;
@@ -449,6 +449,6 @@ namespace Server
         }
 
         public override string ToString() =>
-            $"{InternalId}{(_gameId == uint.MaxValue ? "" : $" ({_gameId})")} {(InProgress ? "In Progress" : $"{_toStart.Elapsed.TotalSeconds:F2}/{ConfigManager.PrimaryConfig.GameDelay}")}, {Players.Count} players";
+            $"{InternalId}{(_gameId == uint.MaxValue ? "" : $" ({_gameId})")} {(InProgress ? "In Progress" : $"{ToStart.Elapsed.TotalSeconds:F2}/{ConfigManager.PrimaryConfig.GameDelay}")}, {Players.Count} players";
     }
 }

@@ -75,12 +75,26 @@ namespace Server.ServerConsole.Commands
 
                 case "rm":
                 case "del":
+                    if (args[1].Equals(ConfigManager.PrimaryConfig.CurrentRound, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Logger.Log("Selected round can't be deleted.", Logger.LogEntryPriority.CommandOutput);
+                        return;
+                    }
+                    
                     for (int i = 0; i < ConfigManager.PrimaryConfig.Rounds.Count; i++)
                         if (ConfigManager.PrimaryConfig.Rounds[i].ShortName
                             .Equals(args[1], StringComparison.OrdinalIgnoreCase))
                         {
                             ConfigManager.PrimaryConfig.Rounds.RemoveAt(i);
                             ConfigManager.SavePrimary();
+
+                            foreach (var u in ConfigManager.Users)
+                            {
+                                if (u.Value.Score.ContainsKey(args[1].ToLowerInvariant()))
+                                    u.Value.Score.Remove(args[1].ToLowerInvariant());
+                            }
+                            
+                            ConfigManager.SaveUsers();
                             Logger.Log("Specified round has been removed.", Logger.LogEntryPriority.CommandOutput);
                             return;
                         }

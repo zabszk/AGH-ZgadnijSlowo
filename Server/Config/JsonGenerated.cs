@@ -43,19 +43,22 @@ namespace Utf8Json.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(11)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(14)
             {
                 {typeof(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>), 0 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, int>), 1 },
                 {typeof(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>), 2 },
-                {typeof(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.User>), 3 },
-                {typeof(global::Server.Config.JsonObjects.Round), 4 },
-                {typeof(global::Server.Config.JsonObjects.CurrentConfig), 5 },
-                {typeof(global::Server.Config.JsonObjects.ScoreboardUser), 6 },
-                {typeof(global::Server.Config.JsonObjects.Scoreboard), 7 },
-                {typeof(global::Server.Config.JsonObjects.PrimaryConfig), 8 },
-                {typeof(global::Server.Config.JsonObjects.User), 9 },
-                {typeof(global::Server.Config.JsonObjects.UsersConfig), 10 },
+                {typeof(global::System.Collections.Generic.List<string>), 3 },
+                {typeof(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardGame>), 4 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.User>), 5 },
+                {typeof(global::Server.Config.JsonObjects.Round), 6 },
+                {typeof(global::Server.Config.JsonObjects.CurrentConfig), 7 },
+                {typeof(global::Server.Config.JsonObjects.ScoreboardUser), 8 },
+                {typeof(global::Server.Config.JsonObjects.ScoreboardGame), 9 },
+                {typeof(global::Server.Config.JsonObjects.Scoreboard), 10 },
+                {typeof(global::Server.Config.JsonObjects.PrimaryConfig), 11 },
+                {typeof(global::Server.Config.JsonObjects.User), 12 },
+                {typeof(global::Server.Config.JsonObjects.UsersConfig), 13 },
             };
         }
 
@@ -69,14 +72,17 @@ namespace Utf8Json.Resolvers
                 case 0: return new global::Utf8Json.Formatters.ListFormatter<global::Server.Config.JsonObjects.Round>();
                 case 1: return new global::Utf8Json.Formatters.DictionaryFormatter<string, int>();
                 case 2: return new global::Utf8Json.Formatters.ListFormatter<global::Server.Config.JsonObjects.ScoreboardUser>();
-                case 3: return new global::Utf8Json.Formatters.DictionaryFormatter<string, global::Server.Config.JsonObjects.User>();
-                case 4: return new Utf8Json.Formatters.Server.Config.JsonObjects.RoundFormatter();
-                case 5: return new Utf8Json.Formatters.Server.Config.JsonObjects.CurrentConfigFormatter();
-                case 6: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardUserFormatter();
-                case 7: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardFormatter();
-                case 8: return new Utf8Json.Formatters.Server.Config.JsonObjects.PrimaryConfigFormatter();
-                case 9: return new Utf8Json.Formatters.Server.Config.JsonObjects.UserFormatter();
-                case 10: return new Utf8Json.Formatters.Server.Config.JsonObjects.UsersConfigFormatter();
+                case 3: return new global::Utf8Json.Formatters.ListFormatter<string>();
+                case 4: return new global::Utf8Json.Formatters.ListFormatter<global::Server.Config.JsonObjects.ScoreboardGame>();
+                case 5: return new global::Utf8Json.Formatters.DictionaryFormatter<string, global::Server.Config.JsonObjects.User>();
+                case 6: return new Utf8Json.Formatters.Server.Config.JsonObjects.RoundFormatter();
+                case 7: return new Utf8Json.Formatters.Server.Config.JsonObjects.CurrentConfigFormatter();
+                case 8: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardUserFormatter();
+                case 9: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardGameFormatter();
+                case 10: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardFormatter();
+                case 11: return new Utf8Json.Formatters.Server.Config.JsonObjects.PrimaryConfigFormatter();
+                case 12: return new Utf8Json.Formatters.Server.Config.JsonObjects.UserFormatter();
+                case 13: return new Utf8Json.Formatters.Server.Config.JsonObjects.UsersConfigFormatter();
                 default: return null;
             }
         }
@@ -299,14 +305,12 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             {
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Username"), 0},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Score"), 1},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LastLogin"), 2},
             };
 
             this.____stringByteKeys = new byte[][]
             {
                 JsonWriter.GetEncodedPropertyNameWithBeginObject("Username"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Score"),
-                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("LastLogin"),
                 
             };
         }
@@ -319,8 +323,6 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteString(value.Username);
             writer.WriteRaw(this.____stringByteKeys[1]);
             formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Serialize(ref writer, value.Score, formatterResolver);
-            writer.WriteRaw(this.____stringByteKeys[2]);
-            writer.WriteInt64(value.LastLogin);
             
             writer.WriteEndObject();
         }
@@ -337,8 +339,6 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __Username__b__ = false;
             var __Score__ = default(global::System.Collections.Generic.Dictionary<string, int>);
             var __Score__b__ = false;
-            var __LastLogin__ = default(long);
-            var __LastLogin__b__ = false;
 
             var ____count = 0;
             reader.ReadIsBeginObjectWithVerify();
@@ -362,9 +362,99 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __Score__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Deserialize(ref reader, formatterResolver);
                         __Score__b__ = true;
                         break;
+                    default:
+                        reader.ReadNextBlock();
+                        break;
+                }
+
+                NEXT_LOOP:
+                continue;
+            }
+
+            var ____result = new global::Server.Config.JsonObjects.ScoreboardUser(__Username__, __Score__);
+
+            return ____result;
+        }
+    }
+
+
+    public sealed class ScoreboardGameFormatter : global::Utf8Json.IJsonFormatter<global::Server.Config.JsonObjects.ScoreboardGame>
+    {
+        readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
+        readonly byte[][] ____stringByteKeys;
+
+        public ScoreboardGameFormatter()
+        {
+            this.____keyMapping = new global::Utf8Json.Internal.AutomataDictionary()
+            {
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("InternalId"), 0},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("TimeElapsed"), 1},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Players"), 2},
+            };
+
+            this.____stringByteKeys = new byte[][]
+            {
+                JsonWriter.GetEncodedPropertyNameWithBeginObject("InternalId"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("TimeElapsed"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Players"),
+                
+            };
+        }
+
+        public void Serialize(ref JsonWriter writer, global::Server.Config.JsonObjects.ScoreboardGame value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            
+
+            writer.WriteRaw(this.____stringByteKeys[0]);
+            writer.WriteUInt32(value.InternalId);
+            writer.WriteRaw(this.____stringByteKeys[1]);
+            writer.WriteInt32(value.TimeElapsed);
+            writer.WriteRaw(this.____stringByteKeys[2]);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<string>>().Serialize(ref writer, value.Players, formatterResolver);
+            
+            writer.WriteEndObject();
+        }
+
+        public global::Server.Config.JsonObjects.ScoreboardGame Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            if (reader.ReadIsNull())
+            {
+                throw new InvalidOperationException("typecode is null, struct not supported");
+            }
+            
+
+            var __InternalId__ = default(uint);
+            var __InternalId__b__ = false;
+            var __TimeElapsed__ = default(int);
+            var __TimeElapsed__b__ = false;
+            var __Players__ = default(global::System.Collections.Generic.List<string>);
+            var __Players__b__ = false;
+
+            var ____count = 0;
+            reader.ReadIsBeginObjectWithVerify();
+            while (!reader.ReadIsEndObjectWithSkipValueSeparator(ref ____count))
+            {
+                var stringKey = reader.ReadPropertyNameSegmentRaw();
+                int key;
+                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
+                {
+                    reader.ReadNextBlock();
+                    goto NEXT_LOOP;
+                }
+
+                switch (key)
+                {
+                    case 0:
+                        __InternalId__ = reader.ReadUInt32();
+                        __InternalId__b__ = true;
+                        break;
+                    case 1:
+                        __TimeElapsed__ = reader.ReadInt32();
+                        __TimeElapsed__b__ = true;
+                        break;
                     case 2:
-                        __LastLogin__ = reader.ReadInt64();
-                        __LastLogin__b__ = true;
+                        __Players__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<string>>().Deserialize(ref reader, formatterResolver);
+                        __Players__b__ = true;
                         break;
                     default:
                         reader.ReadNextBlock();
@@ -375,7 +465,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.ScoreboardUser(__Username__, __Score__, __LastLogin__);
+            var ____result = new global::Server.Config.JsonObjects.ScoreboardGame(__InternalId__, __TimeElapsed__, __Players__);
 
             return ____result;
         }
@@ -396,6 +486,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Rounds"), 2},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ServerConfig"), 3},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Scores"), 4},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("GamesInProgress"), 5},
             };
 
             this.____stringByteKeys = new byte[][]
@@ -405,6 +496,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Rounds"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("ServerConfig"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Scores"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("GamesInProgress"),
                 
             };
         }
@@ -414,7 +506,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             
 
             writer.WriteRaw(this.____stringByteKeys[0]);
-            writer.WriteInt64(value.Timestamp);
+            formatterResolver.GetFormatterWithVerify<global::System.DateTime>().Serialize(ref writer, value.Timestamp, formatterResolver);
             writer.WriteRaw(this.____stringByteKeys[1]);
             writer.WriteString(value.ServerVersion);
             writer.WriteRaw(this.____stringByteKeys[2]);
@@ -423,6 +515,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             formatterResolver.GetFormatterWithVerify<global::Server.Config.JsonObjects.CurrentConfig>().Serialize(ref writer, value.ServerConfig, formatterResolver);
             writer.WriteRaw(this.____stringByteKeys[4]);
             formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>>().Serialize(ref writer, value.Scores, formatterResolver);
+            writer.WriteRaw(this.____stringByteKeys[5]);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardGame>>().Serialize(ref writer, value.GamesInProgress, formatterResolver);
             
             writer.WriteEndObject();
         }
@@ -435,7 +529,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             }
             
 
-            var __Timestamp__ = default(long);
+            var __Timestamp__ = default(global::System.DateTime);
             var __Timestamp__b__ = false;
             var __ServerVersion__ = default(string);
             var __ServerVersion__b__ = false;
@@ -445,6 +539,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __ServerConfig__b__ = false;
             var __Scores__ = default(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>);
             var __Scores__b__ = false;
+            var __GamesInProgress__ = default(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardGame>);
+            var __GamesInProgress__b__ = false;
 
             var ____count = 0;
             reader.ReadIsBeginObjectWithVerify();
@@ -461,7 +557,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 switch (key)
                 {
                     case 0:
-                        __Timestamp__ = reader.ReadInt64();
+                        __Timestamp__ = formatterResolver.GetFormatterWithVerify<global::System.DateTime>().Deserialize(ref reader, formatterResolver);
                         __Timestamp__b__ = true;
                         break;
                     case 1:
@@ -480,6 +576,10 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __Scores__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>>().Deserialize(ref reader, formatterResolver);
                         __Scores__b__ = true;
                         break;
+                    case 5:
+                        __GamesInProgress__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardGame>>().Deserialize(ref reader, formatterResolver);
+                        __GamesInProgress__b__ = true;
+                        break;
                     default:
                         reader.ReadNextBlock();
                         break;
@@ -489,7 +589,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.Scoreboard(__Timestamp__, __ServerVersion__, __Rounds__, __ServerConfig__, __Scores__);
+            var ____result = new global::Server.Config.JsonObjects.Scoreboard(__Timestamp__, __ServerVersion__, __Rounds__, __ServerConfig__, __Scores__, __GamesInProgress__);
 
             return ____result;
         }

@@ -28,7 +28,7 @@ function LoadList() {
 
             let scoreboard = '<table><tr><td>Username</td>';
             rounds.forEach(r => {
-                scoreboard += '<td>' + roundFullNames[r] + '</td>';
+                scoreboard += (data.ServerConfig.ActiveRound === r) ? ('<td class="active-round">' + roundFullNames[r] + '</td>') : ('<td>' + roundFullNames[r] + '</td>');
             });
             scoreboard += '</tr>';
 
@@ -48,8 +48,14 @@ function LoadList() {
 
             scoreboardContainer.html(scoreboard);
 
+            $("#version").text(data.ServerVersion);
+            $("#timestamp").text(data.Timestamp);
+            $("#cfg-limit").text(data.ServerConfig.PlayersLimit);
+            $("#cfg-delay").text(data.ServerConfig.GameDelay);
+            $("#cfg-active").text(roundFullNames[data.ServerConfig.ActiveRound]);
+
             $("#loading-container").css("visibility", "hidden");
-            scoreboardContainer.css("visibility", "visible");
+            $("#container").css("visibility", "visible");
 
             clearInterval(animationInterval);
         }});
