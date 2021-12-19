@@ -33,6 +33,7 @@
                 case "start":
                 case "games":
                 case "timer":
+                case "hold":
                     NoAutoStart = !NoAutoStart;
 
                     lock (Program.Server.GameQueueLock)
@@ -40,12 +41,12 @@
                         Program.Server.GameQueue.ForEach(g => g.PlayersChanged(true));
                     }
                     
-                    Logger.Log($"Preventing games from autostarting has been {(NoIncomingConnections ? "enabled" : "disabled")}.", Logger.LogEntryPriority.CommandOutput);
+                    Logger.Log($"Preventing games from autostarting has been {(NoAutoStart ? "enabled" : "disabled")}.", Logger.LogEntryPriority.CommandOutput);
                     break;
                 
                 default:
                     Logger.Log(
-                        "Invalid mode name.\nValid modes:\n- connections / cn / conn / tcp / block - Blocking new connections\n- autostart / auto / start / games / timer - Disabling games autostart",
+                        "Invalid mode name.\nValid modes:\n- connections / cn / conn / tcp / block - Blocking new connections\n- autostart / auto / start / games / timer / hold - Disabling games autostart",
                         Logger.LogEntryPriority.Error);
                     break;
             }
