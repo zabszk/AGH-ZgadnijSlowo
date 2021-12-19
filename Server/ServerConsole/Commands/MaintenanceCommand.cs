@@ -2,6 +2,7 @@
 {
     [CommandHandler("maintenance", "Manages maintenance mode.")]
     [CommandAlias("mn")]
+    [CommandAlias("mnt")]
     public class MaintenanceCommand : CommandBase
     {
         public static bool NoIncomingConnections, NoAutoStart;
@@ -28,6 +29,7 @@
                     break;
                 
                 case "autostart":
+                case "auto":
                 case "start":
                 case "games":
                 case "timer":
@@ -43,7 +45,7 @@
                 
                 default:
                     Logger.Log(
-                        "Invalid mode name.\nValid modes:\n- connections / cn / conn / tcp / block - Blocking new connections\n- autostart / start / games / timer - Disabling games autostart",
+                        "Invalid mode name.\nValid modes:\n- connections / cn / conn / tcp / block - Blocking new connections\n- autostart / auto / start / games / timer - Disabling games autostart",
                         Logger.LogEntryPriority.Error);
                     break;
             }

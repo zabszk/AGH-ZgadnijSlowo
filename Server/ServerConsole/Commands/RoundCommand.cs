@@ -77,7 +77,7 @@ namespace Server.ServerConsole.Commands
                 case "del":
                     if (args[1].Equals(ConfigManager.PrimaryConfig.CurrentRound, StringComparison.OrdinalIgnoreCase))
                     {
-                        Logger.Log("Selected round can't be deleted.", Logger.LogEntryPriority.CommandOutput);
+                        Logger.Log("Selected round can't be deleted.", Logger.LogEntryPriority.Error);
                         return;
                     }
                     

@@ -62,6 +62,8 @@ function LoadList() {
                     pending += "Game in progress";
                 else if (r.TimeElapsed === -1)
                     pending += "Waiting for players";
+                else if (r.TimeElapsed === -3)
+                    pending += "Administrative hold";
                 else pending += "Waiting for players, starting in " + (data.ServerConfig.GameDelay - r.TimeElapsed);
                 pending += '<br>';
 

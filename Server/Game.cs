@@ -456,6 +456,6 @@ namespace Server
         }
 
         public override string ToString() =>
-            $"{InternalId}{(_gameId == uint.MaxValue ? "" : $" ({_gameId})")} {(InProgress ? "In Progress" : $"{ToStart.Elapsed.TotalSeconds:F2}/{ConfigManager.PrimaryConfig.GameDelay}")}, {Players.Count} players";
+            $"{InternalId}{(_gameId == uint.MaxValue ? "" : $" ({_gameId})")} {(InProgress ? "In Progress" : MaintenanceCommand.NoAutoStart ? "Administrative Hold" : $"{ToStart.Elapsed.TotalSeconds:F2}/{ConfigManager.PrimaryConfig.GameDelay}")}, {Players.Count} players";
     }
 }

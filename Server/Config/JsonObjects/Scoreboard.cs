@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Server.ServerConsole.Commands;
 using Utf8Json;
 
 namespace Server.Config.JsonObjects
@@ -188,7 +189,7 @@ namespace Server.Config.JsonObjects
         internal ScoreboardGame(Game game)
         {
             InternalId = game.InternalId;
-            TimeElapsed = game.InProgress ? -2 : game.ToStart.IsRunning ? (int)game.ToStart.Elapsed.TotalSeconds : -1;
+            TimeElapsed = MaintenanceCommand.NoAutoStart ? -3 : game.InProgress ? -2 : game.ToStart.IsRunning ? (int)game.ToStart.Elapsed.TotalSeconds : -1;
             Players = new();
 
             lock (game.PlayersListLock)

@@ -129,7 +129,7 @@ namespace Server
                 {
                     try
                     {
-                        await Task.Delay(30000, token);
+                        await Task.Delay(6000, token);
                     }
                     catch (TaskCanceledException)
                     {

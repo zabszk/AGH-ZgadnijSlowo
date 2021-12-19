@@ -55,13 +55,6 @@ jobs:
       with:
         name: ZgadnijSlowo-WebUI
         path: ${{ github.workspace }}/WebUI
-        
-    - if: matrix.os == 'ubuntu-20.04'
-      name: Upload WebUI to bundle
-      uses: actions/upload-artifact@v2
-      with:
-        name: ZgadnijSlowo-all-${{ matrix.framework }}
-        path: ${{ github.workspace }}/WebUI
 
     - name: Upload ${{ matrix.target }} Build to bundle
       uses: actions/upload-artifact@v2
