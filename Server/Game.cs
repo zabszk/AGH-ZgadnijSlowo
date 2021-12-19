@@ -212,7 +212,11 @@ namespace Server
                     cls.Clear();
                     lock (PlayersListLock)
                     {
-                        cls.AddRange(Players);
+                        foreach (var pl in Players)
+                        {
+                            pl.Guessing = ServerClient.GuessingMode.None;
+                            cls.Add(pl);
+                        }
                     }
 
                     for (int j = 0; j < 500 && cls.Count > 0; j++)
@@ -233,40 +237,39 @@ namespace Server
                                         Log($"Player {c.Username}'s input has been ignored (timeout).");
                                         c.WriteText("#");
                                     }
-                                    else if (r.Length < 2)
-                                    {
-                                        Log(
-                                            $"Player {c.Username} has been removed from the game - invalid input (too short). Total awarded points: {c.ScoredDuringThisGame}.");
-                                        clsToRemove.Add(c);
-                                        c.Dispose();
-                                        continue;
-                                    }
                                     else
-                                        switch (r[0])
+                                        switch (c.Guessing)
                                         {
-                                            case '=' when r[1..].Equals(_word, StringComparison.Ordinal):
+                                            case ServerClient.GuessingMode.GuessingWord
+                                                when r.Equals(_word, StringComparison.Ordinal):
+                                                c.Guessing = ServerClient.GuessingMode.None;
+                                                clsToRemove.Add(c);
                                                 c.WriteText("=");
                                                 c.ScoredDuringThisGame += 5;
                                                 c.WriteText(c.ScoredDuringThisGame.ToString());
                                                 Log(
-                                                    $"Player {c.Username} guessed the word {r[1..]}. Total points awarded for the entire round: {c.ScoredDuringThisGame}.");
+                                                    $"Player {c.Username} guessed the word {r}. Total points awarded for the entire round: {c.ScoredDuringThisGame}.");
                                                 endGuessing = true;
                                                 c.Dispose();
                                                 break;
 
-                                            case '=':
+                                            case ServerClient.GuessingMode.GuessingWord:
+                                                c.Guessing = ServerClient.GuessingMode.None;
+                                                clsToRemove.Add(c);
                                                 c.WriteText("!");
                                                 Log(
-                                                    $"Player {c.Username} failed to guess the word {(r.Length > 1 ? r[1..] : "(invalid input)")}. No points awarded.");
+                                                    $"Player {c.Username} failed to guess the word {(r.Length > 1 ? r : "(invalid input)")}. No points awarded.");
                                                 break;
 
-                                            case '+':
+                                            case ServerClient.GuessingMode.GuessingLetter:
                                             {
+                                                c.Guessing = ServerClient.GuessingMode.None;
+                                                clsToRemove.Add(c);
                                                 sb.Clear();
                                                 ushort p = 0;
                                                 for (int k = 0; k < _word.Length; k++)
                                                 {
-                                                    if (_word[k] == r[1])
+                                                    if (_word[k] == r[0])
                                                     {
                                                         p++;
                                                         sb.Append('1');
@@ -278,34 +281,56 @@ namespace Server
                                                 {
                                                     c.WriteText("!");
                                                     Log(
-                                                        $"Player {c.Username} failed to guess letter {r[1]}. No points awarded.");
+                                                        $"Player {c.Username} failed to guess letter {r[0]}. No points awarded.");
                                                 }
                                                 else
                                                 {
                                                     c.WriteText("=");
                                                     c.WriteText(sb.ToString());
 
-                                                    if (!c.GuessedLetters.Contains(r[1]))
+                                                    if (!c.GuessedLetters.Contains(r[0]))
                                                     {
-                                                        c.GuessedLetters.Add(r[1]);
+                                                        c.GuessedLetters.Add(r[0]);
                                                         c.ScoredDuringThisGame += p;
                                                     }
                                                     else p = 0;
 
                                                     Log(
-                                                        $"Player {c.Username} guessed letter {r[1]}. Points awarded: {p}.");
+                                                        $"Player {c.Username} guessed letter {r[0]}. Points awarded: {p}.");
+                                                }
+                                            }
+                                                break;
+                                            
+                                            case ServerClient.GuessingMode.None:
+                                                switch (r[0])
+                                                {
+                                                    case '=':
+                                                        c.Guessing = ServerClient.GuessingMode.GuessingWord;
+                                                        Log(
+                                                            $"Player {c.Username} entered word guessing.");
+                                                        break;
+
+                                                    case '+':
+                                                        c.Guessing = ServerClient.GuessingMode.GuessingLetter;
+                                                        Log(
+                                                            $"Player {c.Username} entered letter guessing.");
+                                                        break;
+
+                                                    default:
+                                                        Log(
+                                                            $"Player {c.Username} has been removed from the game - invalid input: {r}. Total awarded points: {c.ScoredDuringThisGame}.");
+                                                        clsToRemove.Add(c);
+                                                        c.Dispose();
+                                                        continue;
                                                 }
                                                 break;
-                                            }
-
+                                            
                                             default:
+                                                c.Guessing = ServerClient.GuessingMode.None;
                                                 Log(
-                                                    $"Player {c.Username} has been removed from the game - invalid input. Total awarded points: {c.ScoredDuringThisGame}.");
-                                                clsToRemove.Add(c);
-                                                c.Dispose();
-                                                continue;
+                                                    $"Error occured while processing response from {c.Username}.");
+                                                break;
                                         }
-                                    clsToRemove.Add(c);
                                 }
                                 catch (Exception e)
                                 {

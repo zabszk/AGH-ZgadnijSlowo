@@ -12,7 +12,7 @@ namespace Client
 {
     internal static class Client
     {
-        private static readonly TcpClient _client = new();
+        private static TcpClient _client;
         private static NetworkStream _s;
         private static StreamReader _reader;
         private static List<char> _availableLetters;
@@ -25,6 +25,11 @@ namespace Client
             try
             {
                 Console.WriteLine($"Connecting to {ip}:{port}...");
+                _i = 0;
+                _guessedLetters = null;
+                _lastGuessed = default;
+                _availableLetters = null;
+                _client = new();
                 await _client.ConnectAsync(ip, port, token);
                 Console.WriteLine($"Connected to {ip}:{port}");
 
@@ -145,13 +150,15 @@ namespace Client
             {
                 int r = SecureRandomGenerator.RandomInt(0, _availableLetters.Count - 1);
                 _lastGuessed = _availableLetters[r];
-                WriteText($"+{_lastGuessed}");
+                WriteText("+");
+                WriteText(_lastGuessed.ToString());
                 _availableLetters.RemoveAt(r);
                 return;
             }
 
             _lastGuessed = '\0';
-            WriteText($"={Program.Words.Words[SecureRandomGenerator.RandomInt(0, Program.Words.Words.Count - 1)]}");
+            WriteText("=");
+            WriteText(Program.Words.Words[SecureRandomGenerator.RandomInt(0, Program.Words.Words.Count - 1)]);
         }
         
         private static void WriteText(string text)

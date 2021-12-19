@@ -24,6 +24,7 @@ namespace Server
         internal Queue<string> Received;
         internal List<char> GuessedLetters;
         internal ushort ScoredDuringThisGame;
+        internal GuessingMode Guessing;
         public User User;
         public readonly Stopwatch TimeoutStopwatch = new();
         private string _username;
@@ -217,5 +218,12 @@ namespace Server
         public string RemoteEndPoint => _client.Client.RemoteEndPoint == null ? "(null)" : _client.Client.RemoteEndPoint.ToString();
         
         public override string ToString() => $"{(User == null ? "(unauthenticated)" : Username)} [{RemoteEndPoint}]: {(Game == null ? "---" : Game.ToString())}";
+        
+        internal enum GuessingMode : byte
+        {
+            None,
+            GuessingWord,
+            GuessingLetter
+        }
     }
 }
