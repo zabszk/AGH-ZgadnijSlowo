@@ -85,6 +85,7 @@ namespace Server
             {
                 Server?.Dispose();
                 Save();
+                ConfigManager.GenerateScoreboard();
                 LoggerCts.Cancel();
                 loggerTask?.Wait();
             }
