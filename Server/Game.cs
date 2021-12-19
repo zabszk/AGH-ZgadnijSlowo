@@ -436,13 +436,13 @@ namespace Server
         {
             if (_gameId == uint.MaxValue)
             {
-                Logger.Log("Skipping writing logs - no Game ID assigned.");
+                Logger.Log("Skipping writing logs - no Game ID assigned.", Logger.LogEntryPriority.Verbose);
                 return;
             }
             
             try
             {
-                Logger.Log($"Writing logs for game {_gameId}.");
+                Logger.Log($"Writing logs for game {_gameId}.", Logger.LogEntryPriority.Verbose);
                 if (!Directory.Exists(PathManager.RoundLogsPath))
                     Directory.CreateDirectory(PathManager.RoundLogsPath);
             
@@ -460,7 +460,7 @@ namespace Server
                 wr.Flush();
                 wr.Dispose();
                 fs.Close();
-                Logger.Log($"Completed writing logs for game {_gameId}.");
+                Logger.Log($"Completed writing logs for game {_gameId}.", Logger.LogEntryPriority.Verbose);
             }
             catch (Exception e)
             {

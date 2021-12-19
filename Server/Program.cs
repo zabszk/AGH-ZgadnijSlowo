@@ -113,9 +113,9 @@ namespace Server
                 if (token.IsCancellationRequested)
                     break;
                 
-                Logger.Log("Running autosave...");
+                Logger.Log("Running autosave...", Logger.LogEntryPriority.Verbose);
                 Save(false);
-                Logger.Log("Autosave completed.");
+                Logger.Log("Autosave completed.", Logger.LogEntryPriority.Verbose);
             }
         }
 

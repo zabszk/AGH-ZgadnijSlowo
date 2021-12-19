@@ -15,9 +15,10 @@ namespace Server.Config.JsonObjects
         public uint NextGameId;
         public string WebRootPath;
         public bool LiveView;
+        public bool VerboseView;
 
         [SerializationConstructor]
-        public PrimaryConfig(string listeningIp, ushort listeningPort, ushort playersLimit, ushort gameDelay, List<Round> rounds, string currentRound, uint nextGameId, string webRootPath, bool liveView)
+        public PrimaryConfig(string listeningIp, ushort listeningPort, ushort playersLimit, ushort gameDelay, List<Round> rounds, string currentRound, uint nextGameId, string webRootPath, bool liveView, bool verboseView)
         {
             ListeningIp = listeningIp;
             ListeningPort = listeningPort;
@@ -28,6 +29,7 @@ namespace Server.Config.JsonObjects
             NextGameId = nextGameId;
             WebRootPath = webRootPath;
             LiveView = liveView;
+            VerboseView = verboseView;
         }
 
         public bool Equals(PrimaryConfig other)

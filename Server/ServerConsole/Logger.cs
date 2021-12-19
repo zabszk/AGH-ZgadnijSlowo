@@ -10,7 +10,7 @@ namespace Server.ServerConsole
 {
     public static class Logger
     {
-        private static bool _liveView = true;
+        private static bool _liveView = true, _verboseView = true;
         
         public static bool LiveView
         {
@@ -18,7 +18,24 @@ namespace Server.ServerConsole
             set
             {
                 _liveView = value;
+                
+                if (ConfigManager.PrimaryConfig.LiveView == value)
+                    return;
                 ConfigManager.PrimaryConfig.LiveView = value;
+                ConfigManager.SavePrimary();
+            }
+        }
+        
+        public static bool VerboseView
+        {
+            get => _verboseView;
+            set
+            {
+                _verboseView = value;
+
+                if (ConfigManager.PrimaryConfig.VerboseView == value)
+                    return;
+                ConfigManager.PrimaryConfig.VerboseView = value;
                 ConfigManager.SavePrimary();
             }
         }
@@ -26,7 +43,7 @@ namespace Server.ServerConsole
         private static readonly ConcurrentQueue<LogEntry> Q = new();
 
         private static readonly ConsoleColor[] Colors = 
-            { ConsoleColor.Gray, ConsoleColor.Green, ConsoleColor.DarkMagenta, ConsoleColor.Cyan, ConsoleColor.Red, ConsoleColor.Magenta };
+            { ConsoleColor.Gray, ConsoleColor.Green, ConsoleColor.DarkMagenta, ConsoleColor.Cyan, ConsoleColor.Red, ConsoleColor.Magenta, ConsoleColor.DarkCyan };
 
         internal static void Log(string text, LogEntryPriority priority = LogEntryPriority.Info, uint gameId = 0,
             LogType type = LogType.PrintAndLog) => Q.Enqueue(new LogEntry(
@@ -70,7 +87,7 @@ namespace Server.ServerConsole
                             var split = le.Message.Split('\n');
                             foreach (var l in split)
                             {
-                                if (le.Type != LogType.Log && (LiveView || le.Priority != LogEntryPriority.LiveView))
+                                if (le.Type != LogType.Log && (LiveView || le.Priority != LogEntryPriority.LiveView) && (VerboseView || le.Priority != LogEntryPriority.Verbose))
                                 {
                                     Console.ForegroundColor = Colors[(byte)le.Priority];
                                     Console.Write(ts);
@@ -183,7 +200,8 @@ namespace Server.ServerConsole
             CommandInput,
             Info,
             Error,
-            Critical
+            Critical,
+            Verbose
         }
 
         public enum LogType : byte

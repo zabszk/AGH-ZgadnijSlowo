@@ -12,7 +12,7 @@
             if (args.Length != 1)
             {
                 Logger.Log(
-                    $"Current maintenance mode status:\nBlock new connections: {NoIncomingConnections}\nDisable games autostart: {NoAutoStart}\n\nModifying modes: maintenance <mode to toggle>",
+                    $"Current maintenance mode status:\nBlock new connections: {NoIncomingConnections}\nAdministrative hold: {NoAutoStart}\n\nModifying modes: maintenance <mode to toggle>",
                     Logger.LogEntryPriority.CommandOutput);
                 return;
             }
@@ -28,12 +28,13 @@
                     Logger.Log($"Blocking incoming connections has been {(NoIncomingConnections ? "enabled" : "disabled")}.", Logger.LogEntryPriority.CommandOutput);
                     break;
                 
+                case "hold":
+                case "adm":
                 case "autostart":
                 case "auto":
                 case "start":
                 case "games":
                 case "timer":
-                case "hold":
                     NoAutoStart = !NoAutoStart;
 
                     lock (Program.Server.GameQueueLock)
@@ -41,12 +42,12 @@
                         Program.Server.GameQueue.ForEach(g => g.PlayersChanged(true));
                     }
                     
-                    Logger.Log($"Preventing games from autostarting has been {(NoAutoStart ? "enabled" : "disabled")}.", Logger.LogEntryPriority.CommandOutput);
+                    Logger.Log($"Administrative hold of games has been {(NoAutoStart ? "enabled" : "disabled")}.", Logger.LogEntryPriority.CommandOutput);
                     break;
                 
                 default:
                     Logger.Log(
-                        "Invalid mode name.\nValid modes:\n- connections / cn / conn / tcp / block - Blocking new connections\n- autostart / auto / start / games / timer / hold - Disabling games autostart",
+                        "Invalid mode name.\nValid modes:\n- connections / cn / conn / tcp / block - Blocking new connections\n- hold / adm / autostart / auto / start / games / timer - Administrative hold",
                         Logger.LogEntryPriority.Error);
                     break;
             }

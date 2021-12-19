@@ -69,7 +69,7 @@ namespace Server.Config
                 if (!File.Exists("config.json"))
                 {
                     PrimaryConfig = new PrimaryConfig("0.0.0.0", 7777, 10, 300,
-                        new List<Round> { new("def", "Default round", 0) }, "def", 0, "webroot", true);
+                        new List<Round> { new("def", "Default round", 0) }, "def", 0, "webroot", true, true);
                     var fs = new FileStream("config.json", FileMode.CreateNew, FileAccess.Write,
                         FileShare.ReadWrite);
                     JsonSerializer.Serialize(fs, PrimaryConfig);
@@ -86,6 +86,7 @@ namespace Server.Config
                 }
 
                 Logger.LiveView = PrimaryConfig.LiveView;
+                Logger.VerboseView = PrimaryConfig.VerboseView;
                 Logger.Log("Primary config loaded.");
             }
 

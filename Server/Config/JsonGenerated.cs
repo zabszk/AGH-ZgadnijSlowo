@@ -614,6 +614,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("NextGameId"), 6},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("WebRootPath"), 7},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LiveView"), 8},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("VerboseView"), 9},
             };
 
             this.____stringByteKeys = new byte[][]
@@ -627,6 +628,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("NextGameId"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("WebRootPath"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("LiveView"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("VerboseView"),
                 
             };
         }
@@ -653,6 +655,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteString(value.WebRootPath);
             writer.WriteRaw(this.____stringByteKeys[8]);
             writer.WriteBoolean(value.LiveView);
+            writer.WriteRaw(this.____stringByteKeys[9]);
+            writer.WriteBoolean(value.VerboseView);
             
             writer.WriteEndObject();
         }
@@ -683,6 +687,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __WebRootPath__b__ = false;
             var __LiveView__ = default(bool);
             var __LiveView__b__ = false;
+            var __VerboseView__ = default(bool);
+            var __VerboseView__b__ = false;
 
             var ____count = 0;
             reader.ReadIsBeginObjectWithVerify();
@@ -734,6 +740,10 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __LiveView__ = reader.ReadBoolean();
                         __LiveView__b__ = true;
                         break;
+                    case 9:
+                        __VerboseView__ = reader.ReadBoolean();
+                        __VerboseView__b__ = true;
+                        break;
                     default:
                         reader.ReadNextBlock();
                         break;
@@ -743,7 +753,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__);
+            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__, __VerboseView__);
             if(__ListeningIp__b__) ____result.ListeningIp = __ListeningIp__;
             if(__ListeningPort__b__) ____result.ListeningPort = __ListeningPort__;
             if(__PlayersLimit__b__) ____result.PlayersLimit = __PlayersLimit__;
@@ -753,6 +763,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             if(__NextGameId__b__) ____result.NextGameId = __NextGameId__;
             if(__WebRootPath__b__) ____result.WebRootPath = __WebRootPath__;
             if(__LiveView__b__) ____result.LiveView = __LiveView__;
+            if(__VerboseView__b__) ____result.VerboseView = __VerboseView__;
 
             return ____result;
         }
