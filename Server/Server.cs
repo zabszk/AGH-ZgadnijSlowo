@@ -131,9 +131,17 @@ namespace Server
                 return;
 
             _disposed = true;
-            
-            for (int i = Clients.Count - 1; i >= 0; i--)
-                Clients[i].Dispose();
+
+            List<ServerClient> c;
+
+            lock (ClientsListLock)
+            {
+                c = new(Clients.Count);
+                c.AddRange(Clients);
+            }
+
+            foreach (var cc in c)
+                cc.Dispose();
 
             lock (GameQueueLock)
             {

@@ -112,8 +112,8 @@ namespace Server
                 //Waiting for players
                 while (!_token.IsCancellationRequested && !_localToken.IsCancellationRequested && !InProgress)
                 {
-                    if (Players.Count == ConfigManager.PrimaryConfig.PlayersLimit ||
-                        ToStart.Elapsed.TotalSeconds >= ConfigManager.PrimaryConfig.GameDelay)
+                    if ((Players.Count == ConfigManager.PrimaryConfig.PlayersLimit ||
+                        ToStart.Elapsed.TotalSeconds >= ConfigManager.PrimaryConfig.GameDelay) && MaintenanceCommand.NoAutoStart)
                     {
                         InProgress = true;
                         break;

@@ -10,6 +10,8 @@ namespace Client
         internal static CancellationTokenSource Cts;
         public static readonly UTF8Encoding Encoder = new ();
         public static ClientWordsStorage Words;
+        
+        public static uint Errors;
 
         private static void Main(string[] args)
         {
@@ -35,7 +37,7 @@ namespace Client
             {
                 Cts = new ();
                 Client.Start(Cts.Token, ip, port, args[2], args[3]).Wait();
-            } while (args.Length > 4 && args[4] == "-l");
+            } while (args.Length > 4 && args[4] == "-l" && Errors < 3);
         }
     }
 }

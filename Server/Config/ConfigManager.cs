@@ -142,7 +142,6 @@ namespace Server.Config
 
         public static void GenerateScoreboard()
         {
-            Logger.Log("Generating scoreboard...", Logger.LogEntryPriority.LiveView, uint.MaxValue, Logger.LogType.Print);
             Scoreboard sb;
             List<ScoreboardGame> g;
             List<ScoreboardUser> su = new(Users.Count);

@@ -114,7 +114,7 @@ namespace Server
                     break;
                 
                 Logger.Log("Running autosave...");
-                Save();
+                Save(false);
                 Logger.Log("Autosave completed.");
             }
         }
@@ -145,13 +145,18 @@ namespace Server
             }
         }
 
-        internal static void Save()
+        internal static void Save(bool log = true)
         {
-            Logger.Log("Saving primary config...");
+            if (log)
+                Logger.Log("Saving primary config...");
             ConfigManager.SavePrimary();
-            Logger.Log("Saving users config...");
+            
+            if (log)
+                Logger.Log("Saving users config...");
             ConfigManager.SaveUsers();
-            Logger.Log("Configs saved.");
+            
+            if (log)
+                Logger.Log("Configs saved.");
         }
     }
 }

@@ -32,6 +32,8 @@ namespace Client
                 _client = new();
                 await _client.ConnectAsync(ip, port, token);
                 Console.WriteLine($"Connected to {ip}:{port}");
+                
+                Program.Errors = 0;
 
                 _s = _client.GetStream();
                 _reader = new StreamReader(_s);
@@ -136,6 +138,7 @@ namespace Client
             catch (Exception e)
             {
                 Console.WriteLine("Exception: " + e.Message);
+                Program.Errors++;
             }
             finally
             {
