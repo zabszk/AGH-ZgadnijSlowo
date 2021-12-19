@@ -26,9 +26,9 @@ function LoadList() {
                 });
             });
 
-            let scoreboard = '<table><tr><td>Username</td>';
+            let scoreboard = '<table><tr><td><b>Username</b></td>';
             rounds.forEach(r => {
-                scoreboard += (data.ServerConfig.ActiveRound === r) ? ('<td class="active-round">' + roundFullNames[r] + '</td>') : ('<td>' + roundFullNames[r] + '</td>');
+                scoreboard += (data.ServerConfig.ActiveRound === r) ? ('<td class="active-round"><b>' + roundFullNames[r] + '</b></td>') : ('<td><b>' + roundFullNames[r] + '</b></td>');
             });
             scoreboard += '</tr>';
 
@@ -47,6 +47,36 @@ function LoadList() {
             scoreboard += '</table>';
 
             scoreboardContainer.html(scoreboard);
+            scoreboard = '';
+
+            let pendingContainer = $("#pending-games");
+            pendingContainer.html();
+
+            let pending = '';
+
+            data.GamesInProgress.forEach(r => {
+                pending += '<b>&bull; Game #' + r.InternalId + '</b><br>';
+                pending += '<b>Status: </b>';
+
+                if (r.TimeElapsed === -2)
+                    pending += "Game in progress";
+                else if (r.TimeElapsed === -1)
+                    pending += "Waiting for players";
+                else pending += "Waiting for players, starting in " + (data.ServerConfig.GameDelay - r.TimeElapsed);
+                pending += '<br>';
+
+                if (r.Players.length > 0) {
+                    pending += "<b>Players:</b><br>";
+                    r.Players.forEach(p => {
+                        pending += "- " + p + "<br>";
+                    });
+                }
+            });
+
+            if (pending === "")
+                pending = "<i>No pending games.</i>"
+
+            pendingContainer.html(pending);
 
             $("#version").text(data.ServerVersion);
             $("#timestamp").text(data.Timestamp);

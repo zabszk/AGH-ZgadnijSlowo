@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Server.Config;
 using Server.ServerConsole;
+using Server.ServerConsole.Commands;
 
 namespace Server
 {
@@ -38,10 +39,18 @@ namespace Server
                             var connection = await _listener.AcceptTcpClientAsync();
                             if (_disposed)
                                 return;
-                            
-                            lock (Program.Server.ClientsListLock)
+
+                            if (MaintenanceCommand.NoIncomingConnections)
                             {
-                                Clients.Add(new ServerClient(this, connection, token));
+                                Logger.Log($"New connection from endpoint {connection.Client.RemoteEndPoint} has been dropped (maintenance mode).", Logger.LogEntryPriority.LiveView, uint.MaxValue);
+                                connection.Dispose();
+                            }
+                            else
+                            {
+                                lock (Program.Server.ClientsListLock)
+                                {
+                                    Clients.Add(new ServerClient(this, connection, token));
+                                }
                             }
                         }
                         catch (Exception e)

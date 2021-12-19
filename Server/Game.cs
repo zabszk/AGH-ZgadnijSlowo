@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Server.Config;
 using Server.Misc;
 using Server.ServerConsole;
+using Server.ServerConsole.Commands;
 using static System.FormattableString;
 
 namespace Server
@@ -78,9 +79,9 @@ namespace Server
             Task.Run(GameTask, _localToken);
         }
 
-        internal void PlayersChanged()
+        internal void PlayersChanged(bool maintenance = false)
         {
-            if (Players.Count == 0)
+            if (Players.Count == 0 && !maintenance)
             {
                 lock (_s.GameQueueLock)
                 {
@@ -90,6 +91,12 @@ namespace Server
                         return;
                     }
                 }
+            }
+
+            if (MaintenanceCommand.NoAutoStart)
+            {
+                ToStart.Reset();
+                return;
             }
 
             if (Players.Count < 2)

@@ -115,7 +115,7 @@ namespace Server.Config.JsonObjects
             }
         }
 
-        public int ScoreInCurrentRound() => Score.ContainsKey(ConfigManager.PrimaryConfig.CurrentRound)
+        private int ScoreInCurrentRound() => Score.ContainsKey(ConfigManager.PrimaryConfig.CurrentRound)
             ? Score[ConfigManager.PrimaryConfig.CurrentRound]
             : 0;
 
@@ -144,7 +144,11 @@ namespace Server.Config.JsonObjects
             return !left.Equals(right);
         }
 
-        public int CompareTo(ScoreboardUser other) => -ScoreInCurrentRound().CompareTo(other.ScoreInCurrentRound());
+        public int CompareTo(ScoreboardUser other)
+        {
+            var cmp = -ScoreInCurrentRound().CompareTo(other.ScoreInCurrentRound());
+            return cmp == 0 ? string.Compare(Username, other.Username, StringComparison.Ordinal) : cmp;
+        }
 
         public static bool operator <(ScoreboardUser left, ScoreboardUser right)
         {
