@@ -68,7 +68,7 @@ function LoadList() {
                 pending += '<br>';
 
                 if (r.Players.length > 0) {
-                    pending += "<b>Players:</b><br>";
+                    pending += "<b>Players (" + r.Players.length + "):</b><br>";
                     r.Players.forEach(p => {
                         pending += "- " + p + "<br>";
                     });
