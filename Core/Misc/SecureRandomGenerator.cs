@@ -5,13 +5,7 @@ namespace Server.Misc
 {
     public static class SecureRandomGenerator
     {
-        private static readonly RNGCryptoServiceProvider _csp;
-        private static byte[] uintBuffer = new byte[sizeof(uint)];
-
-        static SecureRandomGenerator()
-        {
-            _csp = new RNGCryptoServiceProvider();
-        }
+        private static readonly RNGCryptoServiceProvider Csp = new();
 
         public static int RandomInt(int min, int max) => min + (int)(GetRandomUInt() % (max - min));
 
@@ -21,8 +15,7 @@ namespace Server.Misc
 
             // Generate random data
             var rnd = new byte[length];
-            using (var rng = new RNGCryptoServiceProvider())
-                rng.GetBytes(rnd);
+            Csp.GetBytes(rnd);
 
             // Generate the output string
             var allowable = allowableChars.ToCharArray();
@@ -43,7 +36,7 @@ namespace Server.Misc
         private static byte[] GenerateRandomBytes(int bytesNumber)
         {
             byte[] buffer = new byte[bytesNumber];
-            _csp.GetBytes(buffer);
+            Csp.GetBytes(buffer);
             return buffer;
         }
     }
