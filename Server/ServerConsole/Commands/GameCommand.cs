@@ -26,15 +26,15 @@ namespace Server.ServerConsole.Commands
 
                 switch (args[0].ToLowerInvariant())
                 {
-                    case "start" when game.Players.Count >= 2:
-                    case "s" when game.Players.Count >= 2:
+                    case "start" when game.Players.Count >= 1:
+                    case "s" when game.Players.Count >= 1:
                         game.InProgress = true;
                         Logger.Log("Game has been started.", Logger.LogEntryPriority.CommandOutput);
                         break;
 
                     case "start":
                     case "s":
-                        Logger.Log("There must be at least 2 players in the game to start the game.",
+                        Logger.Log("There must be at least 1 player in the game to start the game.",
                             Logger.LogEntryPriority.Error);
                         break;
 

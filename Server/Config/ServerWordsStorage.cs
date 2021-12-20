@@ -6,7 +6,7 @@ namespace Server.Config
 {
     public class ServerWordsStorage : WordsStorage
     {
-        public readonly HashSet<string> Words = new();
+        public readonly List<string> Words = new();
 
         protected override void Add(string text) => Words.Add(text);
 

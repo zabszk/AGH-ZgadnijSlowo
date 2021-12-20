@@ -99,7 +99,7 @@ namespace Server
                 return;
             }
 
-            if (Players.Count < 2)
+            if (Players.Count < 1)
                 ToStart.Reset();
             else if (!ToStart.IsRunning)
                 ToStart.Restart();
@@ -136,41 +136,12 @@ namespace Server
                         Log($"Player {player.Username} has been accepted into the game.");
                 }
 
-                //Selecting word
-                while (_word == null && !_token.IsCancellationRequested && !_localToken.IsCancellationRequested)
-                {
-                    var selected = SelectRandomPlayer();
-                    Log($"Player {selected.Username} has been chosen for selecting word.");
-                    selected.WriteText("@");
-
-                    for (int i = 0; i < 100; i++)
-                    {
-                        await Task.Delay(20, _localToken);
-                        if (selected.Received.Count != 0)
-                        {
-                            _word = selected.Received.Dequeue().ToLowerInvariant();
-                            Log($"Player {selected.Username} chose {_word}.");
-                            break;
-                        }
-                    }
-
-                    if (_word != null && !ConfigManager.WordsStorage.Words.Contains(_word))
-                        _word = null;
-
-                    selected.Dispose();
-
-                    if (_word == null && Players.Count < 2)
-                    {
-                        lock (_s.GameQueueLock)
-                        {
-                            _s.GameQueue.Remove(this);
-                        }
-                        ReallocatePlayers();
-                        return;
-                    }
-                }
-
-                Log($"Word {_word} has been accepted.");
+                _gameId = ConfigManager.PrimaryConfig.NextGameId++;
+                Log($"GameID {_gameId} has been assigned.");
+                
+                _word = ConfigManager.WordsStorage.Words[SecureRandomGenerator.RandomInt(0, ConfigManager.WordsStorage.Words.Count - 1)];
+                Log($"Word {_word} has been chosen.");
+                
                 if (_token.IsCancellationRequested || _localToken.IsCancellationRequested)
                     return;
 
@@ -188,15 +159,13 @@ namespace Server
                         c.WriteText(s);
                 }
 
-                if (_token.IsCancellationRequested)
+                if (_token.IsCancellationRequested || _localToken.IsCancellationRequested)
                     return;
 
                 List<ServerClient> cls = new(Players.Count);
                 List<ServerClient> clsToRemove = new(Players.Count);
-                _gameId = ConfigManager.PrimaryConfig.NextGameId++;
+                
                 bool endGuessing = false;
-                Log($"GameID {_gameId} has been assigned.");
-
                 //Playing
                 for (int i = 0; i < 10 && !_token.IsCancellationRequested && !_localToken.IsCancellationRequested && Players.Count > 0 && !endGuessing; i++)
                 {

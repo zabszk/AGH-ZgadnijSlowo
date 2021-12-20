@@ -25,7 +25,8 @@ namespace Core
                 var reader = new StreamReader(fs);
 
                 while ((line = reader.ReadLine()) != null)
-                    Add(line);
+                    if (line.Length >= 5)
+                        Add(line);
             }
             catch (Exception e)
             {

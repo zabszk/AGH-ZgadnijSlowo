@@ -13,21 +13,7 @@ namespace Server.Misc
             _csp = new RNGCryptoServiceProvider();
         }
 
-        public static int RandomInt(int minValue, int maxExclusiveValue)
-        {
-            if (minValue >= maxExclusiveValue)
-                throw new ArgumentOutOfRangeException("minValue must be lower than maxExclusiveValue");
-
-            long diff = (long)maxExclusiveValue - minValue;
-            long upperBound = uint.MaxValue / diff * diff;
-
-            uint ui;
-            do
-            {
-                ui = GetRandomUInt();
-            } while (ui >= upperBound);
-            return (int)(minValue + (ui % diff));
-        }
+        public static int RandomInt(int min, int max) => min + (int)(GetRandomUInt() % (max - min));
 
         public static string GeneratePassword(int length = 16)
         {
@@ -50,17 +36,15 @@ namespace Server.Misc
 
         private static uint GetRandomUInt()
         {
-            //var randomBytes = GenerateRandomBytes(sizeof(uint));
-            _csp.GetBytes(uintBuffer);
-            return BitConverter.ToUInt32(uintBuffer, 0);
-            //return BitConverter.ToUInt32(randomBytes, 0);
+            var randomBytes = GenerateRandomBytes(sizeof(uint));
+            return BitConverter.ToUInt32(randomBytes, 0);
         }
 
-        /*private static byte[] GenerateRandomBytes(int bytesNumber)
+        private static byte[] GenerateRandomBytes(int bytesNumber)
         {
             byte[] buffer = new byte[bytesNumber];
             _csp.GetBytes(buffer);
             return buffer;
-        }*/
+        }
     }
 }
