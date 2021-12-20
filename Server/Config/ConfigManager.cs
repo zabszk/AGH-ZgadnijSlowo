@@ -143,41 +143,50 @@ namespace Server.Config
 
         public static void GenerateScoreboard()
         {
-            Scoreboard sb;
-            List<ScoreboardGame> g;
-            List<ScoreboardUser> su = new(Users.Count);
-
-            foreach (var u in Users)
+            try
             {
-                if (u.Value.Suspended)
-                    continue;
+                Scoreboard sb;
+                List<ScoreboardGame> g;
+                List<ScoreboardUser> su = new(Users.Count);
 
-                su.Add(new ScoreboardUser(u.Key, u.Value.Score));
-            }
+                foreach (var u in Users)
+                {
+                    if (u.Value.Suspended)
+                        continue;
 
-            lock (Program.Server.GameQueueLock)
-            {
-                g = new(Program.Server.GameQueue.Count);
-                foreach (var game in Program.Server.GameQueue)
-                    g.Add(new(game));
-            }
+                    su.Add(new ScoreboardUser(u.Key, u.Value.Score));
+                }
 
-            lock (PrimaryLock)
-            {
-                sb = new Scoreboard(DateTime.UtcNow, Core.Version.VersionString, PrimaryConfig.Rounds,
-                    new CurrentConfig(PrimaryConfig.CurrentRound, PrimaryConfig.PlayersLimit, PrimaryConfig.GameDelay),
-                    su, g);
-            }
+                lock (Program.Server.GameQueueLock)
+                {
+                    g = new(Program.Server.GameQueue.Count);
+                    foreach (var game in Program.Server.GameQueue)
+                        g.Add(new(game));
+                }
 
-            lock (ScoreboardLock)
-            {
-                var fs = new FileStream(PathManager.ScoreboardPath, FileMode.Create, FileAccess.Write,
+                lock (PrimaryLock)
+                {
+                    sb = new Scoreboard(DateTime.UtcNow, Core.Version.VersionString, PrimaryConfig.Rounds,
+                        new CurrentConfig(PrimaryConfig.CurrentRound, PrimaryConfig.PlayersLimit,
+                            PrimaryConfig.GameDelay),
+                        su, g);
+                }
+
+                lock (ScoreboardLock)
+                {
+                    var fs = new FileStream(PathManager.ScoreboardPath, FileMode.Create, FileAccess.Write,
                         FileShare.ReadWrite);
-                JsonSerializer.Serialize(fs, sb);
-                fs.Close();
+                    JsonSerializer.Serialize(fs, sb);
+                    fs.Close();
+                }
+
+                Logger.Log("Scoreboard has been generated.", Logger.LogEntryPriority.LiveView, uint.MaxValue,
+                    Logger.LogType.Print);
             }
-            
-            Logger.Log("Scoreboard has been generated.", Logger.LogEntryPriority.LiveView, uint.MaxValue, Logger.LogType.Print);
+            catch (Exception e)
+            {
+                Logger.Log($"Failed to generate scoreboard: {e.Message}", Logger.LogEntryPriority.Error);
+            }
         }
     }
 }

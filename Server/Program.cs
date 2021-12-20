@@ -85,7 +85,10 @@ namespace Server
             {
                 Server?.Dispose();
                 Save();
-                ConfigManager.GenerateScoreboard();
+                
+                if (Server != null)
+                    ConfigManager.GenerateScoreboard();
+                
                 LoggerCts.Cancel();
                 loggerTask?.Wait();
             }
