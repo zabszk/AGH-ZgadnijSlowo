@@ -1,7 +1,7 @@
 let animationInterval = setInterval(AnimateLoading, 75);
-LoadList();
+LoadData();
 
-function LoadList() {
+function LoadData() {
     $.ajax({url: "scoreboard.json", dataType: "json", success: function (data) {
             let scoreboardContainer = $("#scoreboard");
             scoreboardContainer.html();

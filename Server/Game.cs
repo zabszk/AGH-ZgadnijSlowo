@@ -128,6 +128,7 @@ namespace Server
                 _log.Enqueue(Invariant($"Game started at: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}Z"));
                 _log.Enqueue($"Internal Game ID: {InternalId}");
                 _log.Enqueue($"Server version: {Core.Version.VersionString}");
+                _log.Enqueue($"Active round: {ConfigManager.PrimaryConfig.CurrentRound}");
                 _log.Enqueue(string.Empty);
 
                 lock (PlayersListLock)
@@ -415,7 +416,7 @@ namespace Server
                 if (!Directory.Exists(PathManager.RoundLogsPath))
                     Directory.CreateDirectory(PathManager.RoundLogsPath);
             
-                var fs = new FileStream(Invariant($"{PathManager.RoundLogsPath}{_gameId}-{DateTime.UtcNow:yyyy-mm-dd-HH-mm-ss}.log"), FileMode.Create, FileAccess.Write,
+                var fs = new FileStream(Invariant($"{PathManager.RoundLogsPath}{_gameId}-{DateTime.UtcNow:yyyy-MM-dd-HH-mm-ss}.log"), FileMode.Create, FileAccess.Write,
                     FileShare.ReadWrite);
 
                 var wr = new StreamWriter(fs)
