@@ -68,7 +68,7 @@ namespace Server.Config
                 
                 if (!File.Exists("config.json"))
                 {
-                    PrimaryConfig = new PrimaryConfig("0.0.0.0", 7777, 10, 300,
+                    PrimaryConfig = new PrimaryConfig("0.0.0.0", 7777, 1, 10, 300,
                         new List<Round> { new("def", "Default round", 0) }, "def", 0, "webroot", true, true);
                     var fs = new FileStream("config.json", FileMode.CreateNew, FileAccess.Write,
                         FileShare.ReadWrite);
@@ -88,6 +88,14 @@ namespace Server.Config
                 Logger.LiveView = PrimaryConfig.LiveView;
                 Logger.VerboseView = PrimaryConfig.VerboseView;
                 Logger.Log("Primary config loaded.");
+            }
+            
+            // ReSharper disable once InconsistentlySynchronizedField
+            if (PrimaryConfig.MinimumPlayersAmount < 1)
+            {
+                // ReSharper disable once InconsistentlySynchronizedField
+                PrimaryConfig.MinimumPlayersAmount = 1;
+                SavePrimary();
             }
 
             WordsStorage = new ServerWordsStorage();
@@ -168,7 +176,7 @@ namespace Server.Config
                 {
                     sb = new Scoreboard(DateTime.UtcNow, Core.Version.VersionString, PrimaryConfig.Rounds,
                         new CurrentConfig(PrimaryConfig.CurrentRound, PrimaryConfig.PlayersLimit,
-                            PrimaryConfig.GameDelay),
+                            PrimaryConfig.MinimumPlayersAmount, PrimaryConfig.GameDelay),
                         su, g);
                 }
 

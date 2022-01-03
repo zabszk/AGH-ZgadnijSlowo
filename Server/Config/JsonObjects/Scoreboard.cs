@@ -61,19 +61,22 @@ namespace Server.Config.JsonObjects
     {
         public readonly string ActiveRound;
         public readonly ushort PlayersLimit;
+        public readonly ushort MinimumPlayersAmount;
         public readonly ushort GameDelay;
 
         [SerializationConstructor]
-        public CurrentConfig(string activeRound, ushort playersLimit, ushort gameDelay)
+        public CurrentConfig(string activeRound, ushort playersLimit, ushort minimumPlayersAmount, ushort gameDelay)
         {
             ActiveRound = activeRound;
             PlayersLimit = playersLimit;
+            MinimumPlayersAmount = minimumPlayersAmount;
             GameDelay = gameDelay;
         }
 
         public bool Equals(CurrentConfig other)
         {
-            return ActiveRound == other.ActiveRound && PlayersLimit == other.PlayersLimit && GameDelay == other.GameDelay;
+            return ActiveRound == other.ActiveRound && PlayersLimit == other.PlayersLimit &&
+                   MinimumPlayersAmount == other.MinimumPlayersAmount && GameDelay == other.GameDelay;
         }
 
         public override bool Equals(object obj)
@@ -83,7 +86,7 @@ namespace Server.Config.JsonObjects
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ActiveRound, PlayersLimit, GameDelay);
+            return HashCode.Combine(ActiveRound, PlayersLimit, MinimumPlayersAmount, GameDelay);
         }
 
         public static bool operator ==(CurrentConfig left, CurrentConfig right)

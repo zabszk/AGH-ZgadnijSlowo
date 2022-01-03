@@ -148,7 +148,7 @@ namespace Server
             try
             {
                 if (!_s.CanWrite) return;
-                var encoded = Program.Encoder.GetBytes(text + "\r\n");
+                var encoded = Program.Encoder.GetBytes(text + "\n");
                 _s.Write(encoded, 0, encoded.Length);
             }
             catch

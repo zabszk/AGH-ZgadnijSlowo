@@ -114,7 +114,7 @@ namespace Server.ServerConsole.Commands
                     ConfigManager.Users[args[1]].Password = Misc.Sha.HashToString(Misc.Sha.Sha512(password));
                     ConfigManager.SaveUsers();
 
-                    if (args.Length <= 2)
+                    if (args.Length > 2)
                         Logger.Log($"Password of user {args[1].ToLowerInvariant()} has ben changed.", Logger.LogEntryPriority.CommandOutput);
                     else
                     {

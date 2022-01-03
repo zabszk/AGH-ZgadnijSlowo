@@ -211,13 +211,15 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             {
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ActiveRound"), 0},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("PlayersLimit"), 1},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("GameDelay"), 2},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("MinimumPlayersAmount"), 2},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("GameDelay"), 3},
             };
 
             this.____stringByteKeys = new byte[][]
             {
                 JsonWriter.GetEncodedPropertyNameWithBeginObject("ActiveRound"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("PlayersLimit"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("MinimumPlayersAmount"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("GameDelay"),
                 
             };
@@ -232,6 +234,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteRaw(this.____stringByteKeys[1]);
             writer.WriteUInt16(value.PlayersLimit);
             writer.WriteRaw(this.____stringByteKeys[2]);
+            writer.WriteUInt16(value.MinimumPlayersAmount);
+            writer.WriteRaw(this.____stringByteKeys[3]);
             writer.WriteUInt16(value.GameDelay);
             
             writer.WriteEndObject();
@@ -249,6 +253,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __ActiveRound__b__ = false;
             var __PlayersLimit__ = default(ushort);
             var __PlayersLimit__b__ = false;
+            var __MinimumPlayersAmount__ = default(ushort);
+            var __MinimumPlayersAmount__b__ = false;
             var __GameDelay__ = default(ushort);
             var __GameDelay__b__ = false;
 
@@ -275,6 +281,10 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __PlayersLimit__b__ = true;
                         break;
                     case 2:
+                        __MinimumPlayersAmount__ = reader.ReadUInt16();
+                        __MinimumPlayersAmount__b__ = true;
+                        break;
+                    case 3:
                         __GameDelay__ = reader.ReadUInt16();
                         __GameDelay__b__ = true;
                         break;
@@ -287,7 +297,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.CurrentConfig(__ActiveRound__, __PlayersLimit__, __GameDelay__);
+            var ____result = new global::Server.Config.JsonObjects.CurrentConfig(__ActiveRound__, __PlayersLimit__, __MinimumPlayersAmount__, __GameDelay__);
 
             return ____result;
         }
@@ -607,20 +617,22 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             {
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ListeningIp"), 0},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("ListeningPort"), 1},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("PlayersLimit"), 2},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("GameDelay"), 3},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Rounds"), 4},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("CurrentRound"), 5},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("NextGameId"), 6},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("WebRootPath"), 7},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LiveView"), 8},
-                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("VerboseView"), 9},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("MinimumPlayersAmount"), 2},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("PlayersLimit"), 3},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("GameDelay"), 4},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Rounds"), 5},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("CurrentRound"), 6},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("NextGameId"), 7},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("WebRootPath"), 8},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LiveView"), 9},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("VerboseView"), 10},
             };
 
             this.____stringByteKeys = new byte[][]
             {
                 JsonWriter.GetEncodedPropertyNameWithBeginObject("ListeningIp"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("ListeningPort"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("MinimumPlayersAmount"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("PlayersLimit"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("GameDelay"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Rounds"),
@@ -642,20 +654,22 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteRaw(this.____stringByteKeys[1]);
             writer.WriteUInt16(value.ListeningPort);
             writer.WriteRaw(this.____stringByteKeys[2]);
-            writer.WriteUInt16(value.PlayersLimit);
+            writer.WriteUInt16(value.MinimumPlayersAmount);
             writer.WriteRaw(this.____stringByteKeys[3]);
-            writer.WriteUInt16(value.GameDelay);
+            writer.WriteUInt16(value.PlayersLimit);
             writer.WriteRaw(this.____stringByteKeys[4]);
-            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>>().Serialize(ref writer, value.Rounds, formatterResolver);
+            writer.WriteUInt16(value.GameDelay);
             writer.WriteRaw(this.____stringByteKeys[5]);
-            writer.WriteString(value.CurrentRound);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>>().Serialize(ref writer, value.Rounds, formatterResolver);
             writer.WriteRaw(this.____stringByteKeys[6]);
-            writer.WriteUInt32(value.NextGameId);
+            writer.WriteString(value.CurrentRound);
             writer.WriteRaw(this.____stringByteKeys[7]);
-            writer.WriteString(value.WebRootPath);
+            writer.WriteUInt32(value.NextGameId);
             writer.WriteRaw(this.____stringByteKeys[8]);
-            writer.WriteBoolean(value.LiveView);
+            writer.WriteString(value.WebRootPath);
             writer.WriteRaw(this.____stringByteKeys[9]);
+            writer.WriteBoolean(value.LiveView);
+            writer.WriteRaw(this.____stringByteKeys[10]);
             writer.WriteBoolean(value.VerboseView);
             
             writer.WriteEndObject();
@@ -673,6 +687,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __ListeningIp__b__ = false;
             var __ListeningPort__ = default(ushort);
             var __ListeningPort__b__ = false;
+            var __MinimumPlayersAmount__ = default(ushort);
+            var __MinimumPlayersAmount__b__ = false;
             var __PlayersLimit__ = default(ushort);
             var __PlayersLimit__b__ = false;
             var __GameDelay__ = default(ushort);
@@ -713,34 +729,38 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __ListeningPort__b__ = true;
                         break;
                     case 2:
+                        __MinimumPlayersAmount__ = reader.ReadUInt16();
+                        __MinimumPlayersAmount__b__ = true;
+                        break;
+                    case 3:
                         __PlayersLimit__ = reader.ReadUInt16();
                         __PlayersLimit__b__ = true;
                         break;
-                    case 3:
+                    case 4:
                         __GameDelay__ = reader.ReadUInt16();
                         __GameDelay__b__ = true;
                         break;
-                    case 4:
+                    case 5:
                         __Rounds__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>>().Deserialize(ref reader, formatterResolver);
                         __Rounds__b__ = true;
                         break;
-                    case 5:
+                    case 6:
                         __CurrentRound__ = reader.ReadString();
                         __CurrentRound__b__ = true;
                         break;
-                    case 6:
+                    case 7:
                         __NextGameId__ = reader.ReadUInt32();
                         __NextGameId__b__ = true;
                         break;
-                    case 7:
+                    case 8:
                         __WebRootPath__ = reader.ReadString();
                         __WebRootPath__b__ = true;
                         break;
-                    case 8:
+                    case 9:
                         __LiveView__ = reader.ReadBoolean();
                         __LiveView__b__ = true;
                         break;
-                    case 9:
+                    case 10:
                         __VerboseView__ = reader.ReadBoolean();
                         __VerboseView__b__ = true;
                         break;
@@ -753,9 +773,10 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__, __VerboseView__);
+            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __MinimumPlayersAmount__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__, __VerboseView__);
             if(__ListeningIp__b__) ____result.ListeningIp = __ListeningIp__;
             if(__ListeningPort__b__) ____result.ListeningPort = __ListeningPort__;
+            if(__MinimumPlayersAmount__b__) ____result.MinimumPlayersAmount = __MinimumPlayersAmount__;
             if(__PlayersLimit__b__) ____result.PlayersLimit = __PlayersLimit__;
             if(__GameDelay__b__) ____result.GameDelay = __GameDelay__;
             if(__Rounds__b__) ____result.Rounds = __Rounds__;

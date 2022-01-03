@@ -11,7 +11,7 @@ namespace Server.ServerConsole.Commands
             if (args.Length != 2)
             {
                 Logger.Log(
-                    $"Current game rules:\nPlayers limit: {ConfigManager.PrimaryConfig.PlayersLimit}\nGame delay: {ConfigManager.PrimaryConfig.GameDelay}\n\nModifying game rules: gamerule <rule name> <new value>",
+                    $"Current game rules:\nMinimum amount of players: {ConfigManager.PrimaryConfig.MinimumPlayersAmount}\nPlayers limit: {ConfigManager.PrimaryConfig.PlayersLimit}\nGame delay: {ConfigManager.PrimaryConfig.GameDelay}\n\nModifying game rules: gamerule <rule name> <new value>",
                     Logger.LogEntryPriority.CommandOutput);
                 return;
             }
@@ -29,6 +29,22 @@ namespace Server.ServerConsole.Commands
                     }
 
                     ConfigManager.PrimaryConfig.PlayersLimit = limit;
+                    ConfigManager.SavePrimary();
+                    Logger.Log("Game rule has been updated.", Logger.LogEntryPriority.CommandOutput);
+                }
+                    break;
+                
+                case "minimum":
+                case "min":
+                case "amount":
+                {
+                    if (!ushort.TryParse(args[1], out var min) || min < 1)
+                    {
+                        Logger.Log("New minimum amount must be a positive short integer.", Logger.LogEntryPriority.Error);
+                        return;
+                    }
+
+                    ConfigManager.PrimaryConfig.MinimumPlayersAmount = min;
                     ConfigManager.SavePrimary();
                     Logger.Log("Game rule has been updated.", Logger.LogEntryPriority.CommandOutput);
                 }
@@ -52,7 +68,7 @@ namespace Server.ServerConsole.Commands
                 
                 default:
                     Logger.Log(
-                        "Invalid game rule.\nValid rules:\n- playerslimit / pl / limit - Players limit\n- gamedelay / gd / delay - Game delay",
+                        "Invalid game rule.\nValid rules:\n- minimum / min / amount - Minimum amount of players\n- playerslimit / pl / limit - Players limit\n- gamedelay / gd / delay - Game delay",
                         Logger.LogEntryPriority.Error);
                     break;
             }

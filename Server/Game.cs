@@ -99,7 +99,7 @@ namespace Server
                 return;
             }
 
-            if (Players.Count < 1)
+            if (Players.Count < ConfigManager.PrimaryConfig.MinimumPlayersAmount || Players.Count < 1)
                 ToStart.Reset();
             else if (!ToStart.IsRunning)
                 ToStart.Restart();
@@ -205,6 +205,7 @@ namespace Server
                                     if (j > 100)
                                     {
                                         Log($"Player {c.Username}'s input has been ignored (timeout).");
+                                        clsToRemove.Add(c);
                                         c.WriteText("#");
                                     }
                                     else

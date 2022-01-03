@@ -82,6 +82,7 @@ function LoadData() {
 
             $("#version").text(data.ServerVersion);
             $("#timestamp").text(data.Timestamp);
+            $("#cfg-minimum").text(data.ServerConfig.MinimumPlayersAmount);
             $("#cfg-limit").text(data.ServerConfig.PlayersLimit);
             $("#cfg-delay").text(data.ServerConfig.GameDelay);
             $("#cfg-active").text(roundFullNames[data.ServerConfig.ActiveRound]);
