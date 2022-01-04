@@ -24,7 +24,7 @@ namespace Server
         internal Queue<string> Received;
         internal List<char> GuessedLetters;
         internal ushort ScoredDuringThisGame;
-        internal bool Played;
+        internal bool Played, Ignored;
         internal GuessingMode Guessing;
         public User User;
         public readonly Stopwatch TimeoutStopwatch = new();

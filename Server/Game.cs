@@ -209,6 +209,7 @@ namespace Server
                                     {
                                         Log($"Player {c.Username}'s input has been ignored (timeout).");
                                         clsToRemove.Add(c);
+                                        c.Ignored = true;
                                         c.WriteText("#");
                                     }
                                     else
@@ -279,18 +280,28 @@ namespace Server
                                                 switch (r[0])
                                                 {
                                                     case '=':
+                                                        c.Ignored = false;
                                                         c.Guessing = ServerClient.GuessingMode.GuessingWord;
                                                         Log(
                                                             $"Player {c.Username} entered word guessing.");
                                                         break;
 
                                                     case '+':
+                                                        c.Ignored = false;
                                                         c.Guessing = ServerClient.GuessingMode.GuessingLetter;
                                                         Log(
                                                             $"Player {c.Username} entered letter guessing.");
                                                         break;
 
                                                     default:
+                                                        if (c.Ignored)
+                                                        {
+                                                            c.Ignored = false;
+                                                            Log(
+                                                                $"Player {c.Username} sent an invalid input: {r}, but previous input was ignored. Waiting for another input.");
+                                                            continue;
+                                                        }
+                                                        
                                                         Log(
                                                             $"Player {c.Username} has been removed from the game - invalid input: {r}. Total awarded points: {c.ScoredDuringThisGame}.");
                                                         clsToRemove.Add(c);

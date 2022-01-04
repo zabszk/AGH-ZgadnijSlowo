@@ -102,7 +102,7 @@ namespace Server.Config.JsonObjects
     {
         public readonly uint Score;
         public readonly uint Games;
-        
+
         [SerializationConstructor]
         public UserRound(uint score, uint games)
         {
@@ -137,6 +137,6 @@ namespace Server.Config.JsonObjects
         
         public static UserRound operator +(UserRound r, uint score) => new UserRound(r.Score + score, r.Games + 1);
 
-        public override string ToString() => $"{Score} in {Games} {(Games == 1 ? "game" : "games")}";
+        public override string ToString() => $"{Score} in {Games} {(Games == 1 ? "game" : "games")}, avg. {(Games == 0 ? "N/A" : $"{Score / (float)Games:F4}")}";
     }
 }
