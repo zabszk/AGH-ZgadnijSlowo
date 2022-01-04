@@ -24,6 +24,7 @@ namespace Server
         internal Queue<string> Received;
         internal List<char> GuessedLetters;
         internal ushort ScoredDuringThisGame;
+        internal bool Played;
         internal GuessingMode Guessing;
         public User User;
         public readonly Stopwatch TimeoutStopwatch = new();
@@ -167,11 +168,11 @@ namespace Server
             _disposed = true;
 
             GC.SuppressFinalize(this);
-            if (ScoredDuringThisGame > 0)
+            if (Played)
             {
                 if (User.Score.ContainsKey(ConfigManager.PrimaryConfig.CurrentRound))
                     User.Score[ConfigManager.PrimaryConfig.CurrentRound] += ScoredDuringThisGame;
-                else User.Score.Add(ConfigManager.PrimaryConfig.CurrentRound, ScoredDuringThisGame);
+                else User.Score.Add(ConfigManager.PrimaryConfig.CurrentRound, new UserRound(ScoredDuringThisGame, 1));
             }
 
             if (Game != null && Game.Players.Contains(this))

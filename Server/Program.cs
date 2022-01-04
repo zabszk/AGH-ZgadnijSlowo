@@ -154,11 +154,14 @@ namespace Server
             if (log)
                 Logger.Log("Saving primary config...");
             ConfigManager.SavePrimary();
-            
-            if (log)
-                Logger.Log("Saving users config...");
-            ConfigManager.SaveUsers();
-            
+
+            if (ConfigManager.UsersConfig != default)
+            {
+                if (log)
+                    Logger.Log("Saving users config...");
+                ConfigManager.SaveUsers();
+            }
+
             if (log)
                 Logger.Log("Configs saved.");
         }

@@ -14,7 +14,7 @@ namespace Server.ServerConsole.Commands
             if (args.Length == 0)
             {
                 Logger.Log(
-                    "Subcommands:\nround list - lists users\nround add <short name> <full name> - creates a round\nround rm <short name> - removes a round\nround priority <short name> <new priority> - sets round display priority\nround rename <short name> <new full name> - renames a round\nround select <short name> - selects round as active",
+                    "Subcommands:\nround list - lists rounds\nround add <short name> <full name> - creates a round\nround rm <short name> - removes a round\nround priority <short name> <new priority> - sets round display priority\nround rename <short name> <new full name> - renames a round\nround select <short name> - selects round as active",
                     Logger.LogEntryPriority.CommandOutput);
                 return;
             }

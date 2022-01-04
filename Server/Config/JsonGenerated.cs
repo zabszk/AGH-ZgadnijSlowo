@@ -43,22 +43,27 @@ namespace Utf8Json.Resolvers
 
         static GeneratedResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(14)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(19)
             {
                 {typeof(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.Round>), 0 },
-                {typeof(global::System.Collections.Generic.Dictionary<string, int>), 1 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>), 1 },
                 {typeof(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardUser>), 2 },
                 {typeof(global::System.Collections.Generic.List<string>), 3 },
                 {typeof(global::System.Collections.Generic.List<global::Server.Config.JsonObjects.ScoreboardGame>), 4 },
                 {typeof(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.User>), 5 },
-                {typeof(global::Server.Config.JsonObjects.Round), 6 },
-                {typeof(global::Server.Config.JsonObjects.CurrentConfig), 7 },
-                {typeof(global::Server.Config.JsonObjects.ScoreboardUser), 8 },
-                {typeof(global::Server.Config.JsonObjects.ScoreboardGame), 9 },
-                {typeof(global::Server.Config.JsonObjects.Scoreboard), 10 },
-                {typeof(global::Server.Config.JsonObjects.PrimaryConfig), 11 },
-                {typeof(global::Server.Config.JsonObjects.User), 12 },
-                {typeof(global::Server.Config.JsonObjects.UsersConfig), 13 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, int>), 6 },
+                {typeof(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.OldJsonObjects.User>), 7 },
+                {typeof(global::Server.Config.JsonObjects.Round), 8 },
+                {typeof(global::Server.Config.JsonObjects.CurrentConfig), 9 },
+                {typeof(global::Server.Config.JsonObjects.UserRound), 10 },
+                {typeof(global::Server.Config.JsonObjects.ScoreboardUser), 11 },
+                {typeof(global::Server.Config.JsonObjects.ScoreboardGame), 12 },
+                {typeof(global::Server.Config.JsonObjects.Scoreboard), 13 },
+                {typeof(global::Server.Config.JsonObjects.PrimaryConfig), 14 },
+                {typeof(global::Server.Config.JsonObjects.User), 15 },
+                {typeof(global::Server.Config.JsonObjects.UsersConfig), 16 },
+                {typeof(global::Server.Config.JsonObjects.OldJsonObjects.User), 17 },
+                {typeof(global::Server.Config.JsonObjects.OldJsonObjects.OldUsersConfig), 18 },
             };
         }
 
@@ -70,19 +75,24 @@ namespace Utf8Json.Resolvers
             switch (key)
             {
                 case 0: return new global::Utf8Json.Formatters.ListFormatter<global::Server.Config.JsonObjects.Round>();
-                case 1: return new global::Utf8Json.Formatters.DictionaryFormatter<string, int>();
+                case 1: return new global::Utf8Json.Formatters.DictionaryFormatter<string, global::Server.Config.JsonObjects.UserRound>();
                 case 2: return new global::Utf8Json.Formatters.ListFormatter<global::Server.Config.JsonObjects.ScoreboardUser>();
                 case 3: return new global::Utf8Json.Formatters.ListFormatter<string>();
                 case 4: return new global::Utf8Json.Formatters.ListFormatter<global::Server.Config.JsonObjects.ScoreboardGame>();
                 case 5: return new global::Utf8Json.Formatters.DictionaryFormatter<string, global::Server.Config.JsonObjects.User>();
-                case 6: return new Utf8Json.Formatters.Server.Config.JsonObjects.RoundFormatter();
-                case 7: return new Utf8Json.Formatters.Server.Config.JsonObjects.CurrentConfigFormatter();
-                case 8: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardUserFormatter();
-                case 9: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardGameFormatter();
-                case 10: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardFormatter();
-                case 11: return new Utf8Json.Formatters.Server.Config.JsonObjects.PrimaryConfigFormatter();
-                case 12: return new Utf8Json.Formatters.Server.Config.JsonObjects.UserFormatter();
-                case 13: return new Utf8Json.Formatters.Server.Config.JsonObjects.UsersConfigFormatter();
+                case 6: return new global::Utf8Json.Formatters.DictionaryFormatter<string, int>();
+                case 7: return new global::Utf8Json.Formatters.DictionaryFormatter<string, global::Server.Config.JsonObjects.OldJsonObjects.User>();
+                case 8: return new Utf8Json.Formatters.Server.Config.JsonObjects.RoundFormatter();
+                case 9: return new Utf8Json.Formatters.Server.Config.JsonObjects.CurrentConfigFormatter();
+                case 10: return new Utf8Json.Formatters.Server.Config.JsonObjects.UserRoundFormatter();
+                case 11: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardUserFormatter();
+                case 12: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardGameFormatter();
+                case 13: return new Utf8Json.Formatters.Server.Config.JsonObjects.ScoreboardFormatter();
+                case 14: return new Utf8Json.Formatters.Server.Config.JsonObjects.PrimaryConfigFormatter();
+                case 15: return new Utf8Json.Formatters.Server.Config.JsonObjects.UserFormatter();
+                case 16: return new Utf8Json.Formatters.Server.Config.JsonObjects.UsersConfigFormatter();
+                case 17: return new Utf8Json.Formatters.Server.Config.JsonObjects.OldJsonObjects.UserFormatter();
+                case 18: return new Utf8Json.Formatters.Server.Config.JsonObjects.OldJsonObjects.OldUsersConfigFormatter();
                 default: return null;
             }
         }
@@ -304,6 +314,90 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
     }
 
 
+    public sealed class UserRoundFormatter : global::Utf8Json.IJsonFormatter<global::Server.Config.JsonObjects.UserRound>
+    {
+        readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
+        readonly byte[][] ____stringByteKeys;
+
+        public UserRoundFormatter()
+        {
+            this.____keyMapping = new global::Utf8Json.Internal.AutomataDictionary()
+            {
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Score"), 0},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Games"), 1},
+            };
+
+            this.____stringByteKeys = new byte[][]
+            {
+                JsonWriter.GetEncodedPropertyNameWithBeginObject("Score"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Games"),
+                
+            };
+        }
+
+        public void Serialize(ref JsonWriter writer, global::Server.Config.JsonObjects.UserRound value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            
+
+            writer.WriteRaw(this.____stringByteKeys[0]);
+            writer.WriteUInt32(value.Score);
+            writer.WriteRaw(this.____stringByteKeys[1]);
+            writer.WriteUInt32(value.Games);
+            
+            writer.WriteEndObject();
+        }
+
+        public global::Server.Config.JsonObjects.UserRound Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            if (reader.ReadIsNull())
+            {
+                throw new InvalidOperationException("typecode is null, struct not supported");
+            }
+            
+
+            var __Score__ = default(uint);
+            var __Score__b__ = false;
+            var __Games__ = default(uint);
+            var __Games__b__ = false;
+
+            var ____count = 0;
+            reader.ReadIsBeginObjectWithVerify();
+            while (!reader.ReadIsEndObjectWithSkipValueSeparator(ref ____count))
+            {
+                var stringKey = reader.ReadPropertyNameSegmentRaw();
+                int key;
+                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
+                {
+                    reader.ReadNextBlock();
+                    goto NEXT_LOOP;
+                }
+
+                switch (key)
+                {
+                    case 0:
+                        __Score__ = reader.ReadUInt32();
+                        __Score__b__ = true;
+                        break;
+                    case 1:
+                        __Games__ = reader.ReadUInt32();
+                        __Games__b__ = true;
+                        break;
+                    default:
+                        reader.ReadNextBlock();
+                        break;
+                }
+
+                NEXT_LOOP:
+                continue;
+            }
+
+            var ____result = new global::Server.Config.JsonObjects.UserRound(__Score__, __Games__);
+
+            return ____result;
+        }
+    }
+
+
     public sealed class ScoreboardUserFormatter : global::Utf8Json.IJsonFormatter<global::Server.Config.JsonObjects.ScoreboardUser>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
@@ -332,7 +426,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteRaw(this.____stringByteKeys[0]);
             writer.WriteString(value.Username);
             writer.WriteRaw(this.____stringByteKeys[1]);
-            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Serialize(ref writer, value.Score, formatterResolver);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>>().Serialize(ref writer, value.Score, formatterResolver);
             
             writer.WriteEndObject();
         }
@@ -347,7 +441,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
 
             var __Username__ = default(string);
             var __Username__b__ = false;
-            var __Score__ = default(global::System.Collections.Generic.Dictionary<string, int>);
+            var __Score__ = default(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>);
             var __Score__b__ = false;
 
             var ____count = 0;
@@ -369,7 +463,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __Username__b__ = true;
                         break;
                     case 1:
-                        __Score__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Deserialize(ref reader, formatterResolver);
+                        __Score__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>>().Deserialize(ref reader, formatterResolver);
                         __Score__b__ = true;
                         break;
                     default:
@@ -626,6 +720,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("WebRootPath"), 8},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LiveView"), 9},
                 { JsonWriter.GetEncodedPropertyNameWithoutQuotation("VerboseView"), 10},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("UsersFileVersion"), 11},
             };
 
             this.____stringByteKeys = new byte[][]
@@ -641,6 +736,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("WebRootPath"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("LiveView"),
                 JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("VerboseView"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("UsersFileVersion"),
                 
             };
         }
@@ -671,6 +767,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteBoolean(value.LiveView);
             writer.WriteRaw(this.____stringByteKeys[10]);
             writer.WriteBoolean(value.VerboseView);
+            writer.WriteRaw(this.____stringByteKeys[11]);
+            writer.WriteInt32(value.UsersFileVersion);
             
             writer.WriteEndObject();
         }
@@ -705,6 +803,8 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             var __LiveView__b__ = false;
             var __VerboseView__ = default(bool);
             var __VerboseView__b__ = false;
+            var __UsersFileVersion__ = default(int);
+            var __UsersFileVersion__b__ = false;
 
             var ____count = 0;
             reader.ReadIsBeginObjectWithVerify();
@@ -764,6 +864,10 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __VerboseView__ = reader.ReadBoolean();
                         __VerboseView__b__ = true;
                         break;
+                    case 11:
+                        __UsersFileVersion__ = reader.ReadInt32();
+                        __UsersFileVersion__b__ = true;
+                        break;
                     default:
                         reader.ReadNextBlock();
                         break;
@@ -773,7 +877,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                 continue;
             }
 
-            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __MinimumPlayersAmount__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__, __VerboseView__);
+            var ____result = new global::Server.Config.JsonObjects.PrimaryConfig(__ListeningIp__, __ListeningPort__, __MinimumPlayersAmount__, __PlayersLimit__, __GameDelay__, __Rounds__, __CurrentRound__, __NextGameId__, __WebRootPath__, __LiveView__, __VerboseView__, __UsersFileVersion__);
             if(__ListeningIp__b__) ____result.ListeningIp = __ListeningIp__;
             if(__ListeningPort__b__) ____result.ListeningPort = __ListeningPort__;
             if(__MinimumPlayersAmount__b__) ____result.MinimumPlayersAmount = __MinimumPlayersAmount__;
@@ -785,6 +889,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             if(__WebRootPath__b__) ____result.WebRootPath = __WebRootPath__;
             if(__LiveView__b__) ____result.LiveView = __LiveView__;
             if(__VerboseView__b__) ____result.VerboseView = __VerboseView__;
+            if(__UsersFileVersion__b__) ____result.UsersFileVersion = __UsersFileVersion__;
 
             return ____result;
         }
@@ -828,7 +933,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             writer.WriteRaw(this.____stringByteKeys[0]);
             writer.WriteString(value.Password);
             writer.WriteRaw(this.____stringByteKeys[1]);
-            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Serialize(ref writer, value.Score, formatterResolver);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>>().Serialize(ref writer, value.Score, formatterResolver);
             writer.WriteRaw(this.____stringByteKeys[2]);
             writer.WriteBoolean(value.Suspended);
             writer.WriteRaw(this.____stringByteKeys[3]);
@@ -847,7 +952,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
 
             var __Password__ = default(string);
             var __Password__b__ = false;
-            var __Score__ = default(global::System.Collections.Generic.Dictionary<string, int>);
+            var __Score__ = default(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>);
             var __Score__b__ = false;
             var __Suspended__ = default(bool);
             var __Suspended__b__ = false;
@@ -873,7 +978,7 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
                         __Password__b__ = true;
                         break;
                     case 1:
-                        __Score__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Deserialize(ref reader, formatterResolver);
+                        __Score__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.UserRound>>().Deserialize(ref reader, formatterResolver);
                         __Score__b__ = true;
                         break;
                     case 2:
@@ -972,6 +1077,211 @@ namespace Utf8Json.Formatters.Server.Config.JsonObjects
             }
 
             var ____result = new global::Server.Config.JsonObjects.UsersConfig(__Users__);
+
+            return ____result;
+        }
+    }
+
+}
+
+#pragma warning disable 168
+#pragma warning restore 219
+#pragma warning restore 414
+#pragma warning restore 618
+#pragma warning restore 612
+#pragma warning disable 618
+#pragma warning disable 612
+#pragma warning disable 414
+#pragma warning disable 219
+#pragma warning disable 168
+
+namespace Utf8Json.Formatters.Server.Config.JsonObjects.OldJsonObjects
+{
+    using System;
+    using Utf8Json;
+
+
+    public sealed class UserFormatter : global::Utf8Json.IJsonFormatter<global::Server.Config.JsonObjects.OldJsonObjects.User>
+    {
+        readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
+        readonly byte[][] ____stringByteKeys;
+
+        public UserFormatter()
+        {
+            this.____keyMapping = new global::Utf8Json.Internal.AutomataDictionary()
+            {
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Password"), 0},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Score"), 1},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Suspended"), 2},
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("LastLogin"), 3},
+            };
+
+            this.____stringByteKeys = new byte[][]
+            {
+                JsonWriter.GetEncodedPropertyNameWithBeginObject("Password"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Score"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("Suspended"),
+                JsonWriter.GetEncodedPropertyNameWithPrefixValueSeparator("LastLogin"),
+                
+            };
+        }
+
+        public void Serialize(ref JsonWriter writer, global::Server.Config.JsonObjects.OldJsonObjects.User value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+            
+
+            writer.WriteRaw(this.____stringByteKeys[0]);
+            writer.WriteString(value.Password);
+            writer.WriteRaw(this.____stringByteKeys[1]);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Serialize(ref writer, value.Score, formatterResolver);
+            writer.WriteRaw(this.____stringByteKeys[2]);
+            writer.WriteBoolean(value.Suspended);
+            writer.WriteRaw(this.____stringByteKeys[3]);
+            formatterResolver.GetFormatterWithVerify<global::System.DateTime>().Serialize(ref writer, value.LastLogin, formatterResolver);
+            
+            writer.WriteEndObject();
+        }
+
+        public global::Server.Config.JsonObjects.OldJsonObjects.User Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            if (reader.ReadIsNull())
+            {
+                return null;
+            }
+            
+
+            var __Password__ = default(string);
+            var __Password__b__ = false;
+            var __Score__ = default(global::System.Collections.Generic.Dictionary<string, int>);
+            var __Score__b__ = false;
+            var __Suspended__ = default(bool);
+            var __Suspended__b__ = false;
+            var __LastLogin__ = default(global::System.DateTime);
+            var __LastLogin__b__ = false;
+
+            var ____count = 0;
+            reader.ReadIsBeginObjectWithVerify();
+            while (!reader.ReadIsEndObjectWithSkipValueSeparator(ref ____count))
+            {
+                var stringKey = reader.ReadPropertyNameSegmentRaw();
+                int key;
+                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
+                {
+                    reader.ReadNextBlock();
+                    goto NEXT_LOOP;
+                }
+
+                switch (key)
+                {
+                    case 0:
+                        __Password__ = reader.ReadString();
+                        __Password__b__ = true;
+                        break;
+                    case 1:
+                        __Score__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, int>>().Deserialize(ref reader, formatterResolver);
+                        __Score__b__ = true;
+                        break;
+                    case 2:
+                        __Suspended__ = reader.ReadBoolean();
+                        __Suspended__b__ = true;
+                        break;
+                    case 3:
+                        __LastLogin__ = formatterResolver.GetFormatterWithVerify<global::System.DateTime>().Deserialize(ref reader, formatterResolver);
+                        __LastLogin__b__ = true;
+                        break;
+                    default:
+                        reader.ReadNextBlock();
+                        break;
+                }
+
+                NEXT_LOOP:
+                continue;
+            }
+
+            var ____result = new global::Server.Config.JsonObjects.OldJsonObjects.User(__Password__, __Score__, __Suspended__, __LastLogin__);
+            if(__Password__b__) ____result.Password = __Password__;
+            if(__Score__b__) ____result.Score = __Score__;
+            if(__Suspended__b__) ____result.Suspended = __Suspended__;
+            if(__LastLogin__b__) ____result.LastLogin = __LastLogin__;
+
+            return ____result;
+        }
+    }
+
+
+    public sealed class OldUsersConfigFormatter : global::Utf8Json.IJsonFormatter<global::Server.Config.JsonObjects.OldJsonObjects.OldUsersConfig>
+    {
+        readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
+        readonly byte[][] ____stringByteKeys;
+
+        public OldUsersConfigFormatter()
+        {
+            this.____keyMapping = new global::Utf8Json.Internal.AutomataDictionary()
+            {
+                { JsonWriter.GetEncodedPropertyNameWithoutQuotation("Users"), 0},
+            };
+
+            this.____stringByteKeys = new byte[][]
+            {
+                JsonWriter.GetEncodedPropertyNameWithBeginObject("Users"),
+                
+            };
+        }
+
+        public void Serialize(ref JsonWriter writer, global::Server.Config.JsonObjects.OldJsonObjects.OldUsersConfig value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            
+
+            writer.WriteRaw(this.____stringByteKeys[0]);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.OldJsonObjects.User>>().Serialize(ref writer, value.Users, formatterResolver);
+            
+            writer.WriteEndObject();
+        }
+
+        public global::Server.Config.JsonObjects.OldJsonObjects.OldUsersConfig Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        {
+            if (reader.ReadIsNull())
+            {
+                throw new InvalidOperationException("typecode is null, struct not supported");
+            }
+            
+
+            var __Users__ = default(global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.OldJsonObjects.User>);
+            var __Users__b__ = false;
+
+            var ____count = 0;
+            reader.ReadIsBeginObjectWithVerify();
+            while (!reader.ReadIsEndObjectWithSkipValueSeparator(ref ____count))
+            {
+                var stringKey = reader.ReadPropertyNameSegmentRaw();
+                int key;
+                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
+                {
+                    reader.ReadNextBlock();
+                    goto NEXT_LOOP;
+                }
+
+                switch (key)
+                {
+                    case 0:
+                        __Users__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.Dictionary<string, global::Server.Config.JsonObjects.OldJsonObjects.User>>().Deserialize(ref reader, formatterResolver);
+                        __Users__b__ = true;
+                        break;
+                    default:
+                        reader.ReadNextBlock();
+                        break;
+                }
+
+                NEXT_LOOP:
+                continue;
+            }
+
+            var ____result = new global::Server.Config.JsonObjects.OldJsonObjects.OldUsersConfig(__Users__);
 
             return ____result;
         }

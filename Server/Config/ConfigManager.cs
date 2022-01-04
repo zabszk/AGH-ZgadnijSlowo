@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using Server.Config.JsonObjects;
+using Server.Config.JsonObjects.OldJsonObjects;
 using Server.ServerConsole;
 using Utf8Json;
 using Utf8Json.Resolvers;
+using User = Server.Config.JsonObjects.User;
 
 namespace Server.Config
 {
@@ -13,6 +15,8 @@ namespace Server.Config
         public static PrimaryConfig PrimaryConfig;
         public static UsersConfig UsersConfig;
         public static ServerWordsStorage WordsStorage;
+
+        private const int CurrentUsersConfigVersion = 2;
 
         private static readonly object PrimaryLock = new(), UsersLock = new(), ScoreboardLock = new();
 
@@ -26,36 +30,6 @@ namespace Server.Config
         
         public static bool Load()
         {
-            lock (UsersLock)
-            {
-                if (File.Exists("users.json.old"))
-                {
-                    if (File.Exists("users.json"))
-                        File.Delete("users.json");
-                    
-                    File.Move("users.json.old", "users.json");
-                }
-                
-                if (!File.Exists("users.json"))
-                {
-                    UsersConfig = new UsersConfig(new Dictionary<string, User>());
-                    var fs = new FileStream("users.json", FileMode.CreateNew, FileAccess.Write,
-                        FileShare.ReadWrite);
-                    JsonSerializer.Serialize(fs, UsersConfig);
-                    fs.Close();
-                }
-                else
-                {
-                    var fs = new FileStream("users.json", FileMode.Open, FileAccess.Read,
-                        FileShare.ReadWrite);
-
-                    UsersConfig = JsonSerializer.Deserialize<UsersConfig>(fs);
-                    fs.Close();
-                }
-
-                Logger.Log("Users config loaded.");
-            }
-
             lock (PrimaryLock)
             {
                 if (File.Exists("config.json.old"))
@@ -69,7 +43,7 @@ namespace Server.Config
                 if (!File.Exists("config.json"))
                 {
                     PrimaryConfig = new PrimaryConfig("0.0.0.0", 7777, 1, 10, 300,
-                        new List<Round> { new("def", "Default round", 0) }, "def", 0, "webroot", true, true);
+                        new List<Round> { new("def", "Default round", 0) }, "def", 0, "webroot", true, true, CurrentUsersConfigVersion);
                     var fs = new FileStream("config.json", FileMode.CreateNew, FileAccess.Write,
                         FileShare.ReadWrite);
                     JsonSerializer.Serialize(fs, PrimaryConfig);
@@ -96,6 +70,52 @@ namespace Server.Config
                 // ReSharper disable once InconsistentlySynchronizedField
                 PrimaryConfig.MinimumPlayersAmount = 1;
                 SavePrimary();
+            }
+            
+            lock (UsersLock)
+            {
+                if (File.Exists("users.json.old"))
+                {
+                    if (File.Exists("users.json"))
+                        File.Delete("users.json");
+                    
+                    File.Move("users.json.old", "users.json");
+                }
+                
+                if (!File.Exists("users.json"))
+                {
+                    UsersConfig = new UsersConfig(new Dictionary<string, User>());
+                    var fs = new FileStream("users.json", FileMode.CreateNew, FileAccess.Write,
+                        FileShare.ReadWrite);
+                    JsonSerializer.Serialize(fs, UsersConfig);
+                    fs.Close();
+                    
+                    if (PrimaryConfig.UsersFileVersion != CurrentUsersConfigVersion)
+                    {
+                        PrimaryConfig.UsersFileVersion = CurrentUsersConfigVersion;
+                        SavePrimary();
+                    }
+                }
+                else
+                {
+                    if (PrimaryConfig.UsersFileVersion < 2)
+                    {
+                        MigrateV1UsersConfig();
+                        
+                        PrimaryConfig.UsersFileVersion = CurrentUsersConfigVersion;
+                        SavePrimary();
+                    }
+                    else
+                    {
+                        var fs = new FileStream("users.json", FileMode.Open, FileAccess.Read,
+                            FileShare.ReadWrite);
+
+                        UsersConfig = JsonSerializer.Deserialize<UsersConfig>(fs);
+                        fs.Close();
+                    }
+                }
+
+                Logger.Log("Users config loaded.");
             }
 
             WordsStorage = new ServerWordsStorage();
@@ -147,6 +167,30 @@ namespace Server.Config
                     Logger.Log($"Saving users config failed: {e.Message}", Logger.LogEntryPriority.Critical);
                 }
             }
+        }
+
+        private static void MigrateV1UsersConfig()
+        {
+            Logger.Log("Migrating V1 users config...");
+            
+            var fs = new FileStream("users.json", FileMode.Open, FileAccess.Read,
+                FileShare.ReadWrite);
+
+            var old = JsonSerializer.Deserialize<OldUsersConfig>(fs);
+            fs.Close();
+            
+            UsersConfig = new UsersConfig(new Dictionary<string, User>(old.Users.Count));
+            foreach (var user in old.Users)
+                UsersConfig.Users.Add(user.Key, new User(user.Value));
+            
+            File.Move("users.json", "users-v1.json");
+            
+            fs = new FileStream("users.json", FileMode.CreateNew, FileAccess.Write,
+                FileShare.ReadWrite);
+            JsonSerializer.Serialize(fs, UsersConfig);
+            fs.Close();
+            
+            Logger.Log("Migrated users config from V1 to V2.");
         }
 
         public static void GenerateScoreboard()

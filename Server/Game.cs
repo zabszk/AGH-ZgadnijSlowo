@@ -134,7 +134,10 @@ namespace Server
                 lock (PlayersListLock)
                 {
                     foreach (var player in Players)
+                    {
                         Log($"Player {player.Username} has been accepted into the game.");
+                        player.Played = true;
+                    }
                 }
 
                 _gameId = ConfigManager.PrimaryConfig.NextGameId++;

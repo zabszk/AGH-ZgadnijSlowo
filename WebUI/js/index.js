@@ -37,7 +37,7 @@ function LoadData() {
 
                 rounds.forEach(r => {
                     if (r in player.Score)
-                        scoreboard += '<td>' + player.Score[r] + '</td>';
+                        scoreboard += '<td>' + player.Score[r].Score + ' in ' + player.Score[r].Games + (player.Score[r].Games === 1 ? ' game' : ' games') + '</td>';
                     else scoreboard += '<td>-</td>';
                 });
 

@@ -17,9 +17,10 @@ namespace Server.Config.JsonObjects
         public string WebRootPath;
         public bool LiveView;
         public bool VerboseView;
+        public int UsersFileVersion;
 
         [SerializationConstructor]
-        public PrimaryConfig(string listeningIp, ushort listeningPort, ushort minimumPlayersAmount, ushort playersLimit, ushort gameDelay, List<Round> rounds, string currentRound, uint nextGameId, string webRootPath, bool liveView, bool verboseView)
+        public PrimaryConfig(string listeningIp, ushort listeningPort, ushort minimumPlayersAmount, ushort playersLimit, ushort gameDelay, List<Round> rounds, string currentRound, uint nextGameId, string webRootPath, bool liveView, bool verboseView, int usersFileVersion)
         {
             ListeningIp = listeningIp;
             ListeningPort = listeningPort;
@@ -32,6 +33,7 @@ namespace Server.Config.JsonObjects
             WebRootPath = webRootPath;
             LiveView = liveView;
             VerboseView = verboseView;
+            UsersFileVersion = usersFileVersion;
         }
 
         public bool Equals(PrimaryConfig other)
@@ -39,7 +41,8 @@ namespace Server.Config.JsonObjects
             return ListeningIp == other.ListeningIp && ListeningPort == other.ListeningPort &&
                    PlayersLimit == other.PlayersLimit && MinimumPlayersAmount == other.MinimumPlayersAmount &&
                    GameDelay == other.GameDelay && Rounds == other.Rounds && CurrentRound == other.CurrentRound &&
-                   WebRootPath == other.WebRootPath && LiveView == other.LiveView;
+                   WebRootPath == other.WebRootPath && LiveView == other.LiveView &&
+                   UsersFileVersion == other.UsersFileVersion;
         }
 
         public override bool Equals(object obj)

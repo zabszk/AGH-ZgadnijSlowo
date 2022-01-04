@@ -43,17 +43,28 @@ namespace Server.Config.JsonObjects
     public class User : IEquatable<User>
     {
         public string Password;
-        public Dictionary<string, int> Score;
+        public Dictionary<string, UserRound> Score;
         public bool Suspended;
         public DateTime LastLogin;
         
         [SerializationConstructor]
-        public User(string password, Dictionary<string, int> score, bool suspended, DateTime lastLogin)
+        public User(string password, Dictionary<string, UserRound> score, bool suspended, DateTime lastLogin)
         {
             Password = password;
             Score = score;
             Suspended = suspended;
             LastLogin = lastLogin;
+        }
+
+        public User(OldJsonObjects.User u)
+        {
+            Password = u.Password;
+            Score = new Dictionary<string, UserRound>(u.Score.Count);
+            Suspended = u.Suspended;
+            LastLogin = u.LastLogin;
+
+            foreach ((string key, int value) in u.Score)
+                Score.Add(key, new UserRound(value > 0 ? (uint) value : 0, 0));
         }
 
         public bool Equals(User other)
@@ -85,5 +96,47 @@ namespace Server.Config.JsonObjects
         {
             return !Equals(left, right);
         }
+    }
+
+    public readonly struct UserRound : IEquatable<UserRound>
+    {
+        public readonly uint Score;
+        public readonly uint Games;
+        
+        [SerializationConstructor]
+        public UserRound(uint score, uint games)
+        {
+            Score = score;
+            Games = games;
+        }
+
+        public bool Equals(UserRound other)
+        {
+            return Score == other.Score && Games == other.Games;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is UserRound other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Score, Games);
+        }
+
+        public static bool operator ==(UserRound left, UserRound right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(UserRound left, UserRound right)
+        {
+            return !left.Equals(right);
+        }
+        
+        public static UserRound operator +(UserRound r, uint score) => new UserRound(r.Score + score, r.Games + 1);
+
+        public override string ToString() => $"{Score} in {Games} {(Games == 1 ? "game" : "games")}";
     }
 }

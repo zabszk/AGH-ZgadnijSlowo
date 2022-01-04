@@ -103,10 +103,10 @@ namespace Server.Config.JsonObjects
     public readonly struct ScoreboardUser : IEquatable<ScoreboardUser>, IComparable<ScoreboardUser>
     {
         public readonly string Username;
-        public readonly Dictionary<string, int> Score;
+        public readonly Dictionary<string, UserRound> Score;
 
         [SerializationConstructor]
-        public ScoreboardUser(string username, Dictionary<string, int> score)
+        public ScoreboardUser(string username, Dictionary<string, UserRound> score)
         {
             Username = username;
             Score = new();
@@ -119,8 +119,8 @@ namespace Server.Config.JsonObjects
             }
         }
 
-        private int ScoreInCurrentRound() => Score.ContainsKey(ConfigManager.PrimaryConfig.CurrentRound)
-            ? Score[ConfigManager.PrimaryConfig.CurrentRound]
+        private uint ScoreInCurrentRound() => Score.ContainsKey(ConfigManager.PrimaryConfig.CurrentRound)
+            ? Score[ConfigManager.PrimaryConfig.CurrentRound].Score
             : 0;
 
         public bool Equals(ScoreboardUser other)

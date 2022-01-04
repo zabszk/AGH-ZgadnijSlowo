@@ -65,7 +65,7 @@ namespace Server.ServerConsole.Commands
 
                     var password = args.Length > 2 ? args[2] : Misc.SecureRandomGenerator.GeneratePassword();
                     ConfigManager.Users.Add(args[1].ToLowerInvariant(), new User(
-                        Misc.Sha.HashToString(Misc.Sha.Sha512(password)), new Dictionary<string, int>(),
+                        Misc.Sha.HashToString(Misc.Sha.Sha512(password)), new Dictionary<string, UserRound>(),
                         false, new DateTime(0)));
                     ConfigManager.SaveUsers();
 
@@ -89,8 +89,7 @@ namespace Server.ServerConsole.Commands
                         Logger.Log("Specified user doesn't exist.", Logger.LogEntryPriority.Error);
                         break;
                     }
-
-                    var score = ConfigManager.Users[args[1].ToLowerInvariant()].Score;
+                    
                     var ll = ConfigManager.Users[args[1].ToLowerInvariant()].LastLogin;
                     ConfigManager.Users.Remove(args[1].ToLowerInvariant());
                     ConfigManager.SaveUsers();
@@ -125,10 +124,12 @@ namespace Server.ServerConsole.Commands
                     break;
                 
                 case "suspend" when args.Length == 1:
+                case "sus" when args.Length == 1:
                     Logger.Log("Syntax error: user suspend <username>", Logger.LogEntryPriority.Error);
                     break;
                 
                 case "suspend":
+                case "sus":
                     if (!ConfigManager.Users.ContainsKey(args[1].ToLowerInvariant()))
                     {
                         Logger.Log("Specified user doesn't exist.", Logger.LogEntryPriority.Error);
