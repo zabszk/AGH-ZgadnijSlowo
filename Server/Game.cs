@@ -115,8 +115,11 @@ namespace Server
                     if ((Players.Count == ConfigManager.PrimaryConfig.PlayersLimit ||
                         ToStart.Elapsed.TotalSeconds >= ConfigManager.PrimaryConfig.GameDelay) && !MaintenanceCommand.NoAutoStart)
                     {
-                        InProgress = true;
-                        break;
+                        if (MaintenanceCommand.HandleAutoEnable())
+                        {
+                            InProgress = true;
+                            break;
+                        }
                     }
 
                     await Task.Delay(2000, _localToken);
@@ -388,26 +391,8 @@ namespace Server
 
                 ConfigManager.SavePrimary();
                 ConfigManager.SaveUsers();
+                Log("The game has been finished.");
                 WriteLog();
-            }
-        }
-
-        private ServerClient SelectRandomPlayer()
-        {
-            lock (PlayersListLock)
-            {
-                return Players[SecureRandomGenerator.RandomInt(0, Players.Count - 1)];
-            }
-        }
-
-        private void ReallocatePlayers()
-        {
-            lock (PlayersListLock)
-            {
-                foreach (var player in Players)
-                    _s.EnqueueClient(player);
-
-                Players.Clear();
             }
         }
 
