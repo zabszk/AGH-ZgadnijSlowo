@@ -16,7 +16,7 @@ namespace Client
         private static void Main(string[] args)
         {
             Console.WriteLine($"ZgadnijSlowo Client, v.{Core.Version.VersionString}");
-            Console.WriteLine("Copyright by Łukasz Jurczyk, 2021");
+            Console.WriteLine("Copyright by Łukasz Jurczyk, 2021-2022");
             Console.WriteLine("Licensed under the MIT License.");
             
             if (args.Length < 4 || !IPAddress.TryParse(args[0], out var ip) || !ushort.TryParse(args[1], out var port))

@@ -45,7 +45,7 @@ namespace Server
             try
             {
                 Logger.Log($"ZgadnijSlowo Server, v.{Core.Version.VersionString}");
-                Logger.Log("Copyright by Łukasz Jurczyk, 2021");
+                Logger.Log("Copyright by Łukasz Jurczyk, 2021-2022");
                 Logger.Log("Licensed under the MIT License.");
                 Logger.Log("Loading configs...");
                 loggerTask = Logger.QueueTask(LoggerCts.Token);

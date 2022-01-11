@@ -15,7 +15,7 @@
 		<RootNamespace>Client</RootNamespace>
 		<PackageId>Client</PackageId>
 		<Authors>Łukasz Jurczyk</Authors>
-		<Copyright>Copyright by Łukasz Jurczyk, 2021</Copyright>
+		<Copyright>Copyright by Łukasz Jurczyk, 2021-2022</Copyright>
 		<Company>Łukasz Jurczyk</Company>
 		<Product>Client</Product>
 		<IsPackable>false</IsPackable>
